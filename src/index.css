@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    font-family: "Commissioner", sans-serif;
+  }
+
+  body {
+    @apply bg-default text-primary-t;
+  }
+}
+
+/* Definición de tema personalizado */
+@theme {
+  /* Colores del tema principal */
+  --color-primary: #3D7BFF;
+  --color-primary-hover: rgba(61, 123, 255, 0.15);
+
+  /* Colores secundarios */
+  --color-secondary: #588CFF;
+  --color-secondary-hover: rgba(88, 140, 255, 0.08);
+  --color-secondary-2: #6193FF;
+
+  /* Colores terciarios */
+  --color-tertiary: oklch(0.4036 0.0592 327.76);
+  --color-tertiary-hover: oklch(0.45 0.0592 327.76);
+
+  /* Colores de error */
+  --color-error: #BA1A1A;
+
+  /* Colores de texto */
+  --color-primary-t: #1A1B21;
+  --color-secondary-t: #45464F;
+
+  /* Colores de fondo */
+  --color-default: #FAF8FF;
+
+  /* Otros colores */
+  --color-other-1: oklch(0.4888 0.0595 328.6);
+
+  --breakpoint-3xl: 150rem;
+}
+
+.initiative-carousel .swiper-button-next,
+.initiative-carousel .swiper-button-prev {
+  @apply text-white bg-black/50 rounded-full w-10 h-10
+}
+
+.initiative-carousel .swiper-button-prev:after,
+.initiative-carousel .swiper-button-next:after {
+  @apply text-sm
+}
+
+.initiative-carousel-nav .swiper-slide-fully-visible {
+  @apply brightness-80
+}
+
+.initiative-carousel-nav .swiper-slide-thumb-active {
+  @apply brightness-100
+}
+
+/* Estilos para Driver.js (tour guiado) */
+.driver-popover.driverjs-openlab {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.driver-popover.driverjs-openlab .driver-popover-title {
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+.driver-popover.driverjs-openlab .driver-popover-description {
+  color: #fff !important;
+}
+
+.driver-popover.driverjs-openlab .driver-popover-navigation-btns button {
+  background-color: #fff !important;
+  color: var(--color-primary) !important;
+  border: none !important;
+}
+
+.initiative-carousel-nav .swiper-wrapper {
+  @apply justify-center
+}
+
+.apply-steps .MuiDialog-container > .MuiPaper-root {
+  background-color: transparent;
+  box-shadow: none;
+  overflow: unset;
+  max-width: unset;
+}
+
