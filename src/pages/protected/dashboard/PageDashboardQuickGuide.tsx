@@ -14,6 +14,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"
 import BuildCircleIcon from "@mui/icons-material/BuildCircle"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import ErrorSimulator from "@/components/debug/ErrorSimulator"
+import ProtocolExplanation from "@/components/onBoarding/ProtocolExplanation"
 
 const containerVariant = {
   hidden: { opacity: 0 },
@@ -100,8 +101,47 @@ const subtitleStyle = { color: "#2970f1", fontWeight: 700, mb: 0.5, fontSize: { 
 
 export default function PageDashboardQuickGuide() {
   return (
-    <Box minHeight="100vh" bgcolor="#f7f8fa" py={6}>
+    <Box minHeight="100dvh" py={6}>
       <Box maxWidth={900} mx="auto" px={2}>
+        {/* titulo principal */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <Typography
+            variant="h4"
+            fontWeight={800}
+            color="#2970f1"
+            align="center"
+            sx={{
+              mb: 1,
+              fontSize: { xs: "1.75rem", sm: "2.25rem" },
+              mx: "auto",
+            }}
+          >
+            Guía Rápida para Usuarios <br />
+            Explora OpenLab
+          </Typography>
+          <Box mb={2} />
+          <Typography variant="body1" color="#444" sx={{ fontSize: { xs: "0.9rem", sm: "1rem" } }}>
+            ¡Bienvenido/a a OpenLab! Esta guía te ayudará a empezar y aprovechar al máximo nuestra plataforma. Descubre
+            cómo proponer ideas, colaborar en proyectos y ser parte de nuestra comunidad de innovación.
+          </Typography>
+          <Box mb={4} />
+        </motion.div>
+
+        {/* Protocolo de OpenLab - Solo botón de más información */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.1 }}
+        >
+          <ProtocolExplanation showBothButtons={false} />
+        </motion.div>
+
         {/* 1. Tu Viaje en OpenLab */}
         <motion.div
           variants={containerVariant}
@@ -111,6 +151,7 @@ export default function PageDashboardQuickGuide() {
         >
           <motion.div variants={itemVariant}>{sectionTitle("1. Tu Viaje en OpenLab: Primeros Pasos")}</motion.div>
           <Box mb={4} />
+
           <motion.div variants={itemVariant}>
             <Box sx={cardStyle}>
               <PersonAddAltIcon sx={{ color: "#2970f1", fontSize: { xs: 30, sm: 36 }, mb: 1.5 }} />

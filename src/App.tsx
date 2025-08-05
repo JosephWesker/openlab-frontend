@@ -24,6 +24,8 @@ import PageDashboardListInitiativeById from "./pages/protected/dashboard/PageDas
 import PageDashboardQuickGuide from "./pages/protected/dashboard/PageDashboardQuickGuide"
 import PageInitiativeDraft from "./pages/protected/dashboard/initiative-draft/PageInitiativeDraft"
 import { GlobalProvider } from "./context/GlobalContext"
+import PageProtocol from "./pages/protected/onboarding/PageProtocol"
+import PageProtocolMore from "./pages/protected/onboarding/PageProtocolMore"
 
 function App() {
   // const { isLoading } = useAuth0()
@@ -57,6 +59,8 @@ function App() {
                 {/* Ruta protegida para el dashboard */}
                 <Route path="/" element={<LayoutProtectedRoute />}>
                   <Route path="onboarding" element={<PageOnBoarding />} />
+                  <Route path="protocol" element={<PageProtocol />} />
+                  <Route path="moreinfo" element={<PageProtocolMore />} />
 
                   {/* Rutas específicas dentro del dashboard */}
                   <Route element={<LayoutDashboard />}>

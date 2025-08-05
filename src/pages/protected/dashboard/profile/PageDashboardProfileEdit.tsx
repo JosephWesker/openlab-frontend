@@ -106,7 +106,7 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
                 value={selectedSkills}
                 onChange={(_, newValue) => {
                   const sanitized = newValue.map((skill) =>
-                    typeof skill === "string" ? skill.trim().toUpperCase() : skill,
+                    typeof skill === "string" ? skill?.trim()?.toUpperCase() : skill,
                   )
                   setSelectedSkills([...new Set(sanitized)])
                   if (error) setError("")
@@ -169,7 +169,7 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
                 value={selectedSkills}
                 onChange={(_, newValue) => {
                   const sanitized = newValue.map((skill) =>
-                    typeof skill === "string" ? skill.trim().toUpperCase() : skill,
+                    typeof skill === "string" ? skill?.trim()?.toUpperCase() : skill,
                   )
                   setSelectedSkills([...new Set(sanitized)])
                   if (error) setError("")
@@ -257,8 +257,8 @@ export default function PageDashboardProfileEdit() {
   } = useForm<ProfileEditFormData>({
     resolver: zodResolver(profileEditSchema),
     defaultValues: {
-      name: userFromApi?.name.trim() || "",
-      email: userFromApi?.email.trim() || "",
+      name: userFromApi?.name?.trim() || "",
+      email: userFromApi?.email?.trim() || "",
       discord: userFromApi?.social?.discord?.trim() || "",
       github: userFromApi?.social?.github?.trim() || "",
       linkedin: userFromApi?.social?.linkedIn?.trim() || "",
@@ -372,7 +372,7 @@ export default function PageDashboardProfileEdit() {
       showSnackbar(SNACKBAR_MESSAGE.USER_UPDATED)
 
       handleAction("/profile")
-    } catch{
+    } catch {
       showSnackbar(SNACKBAR_MESSAGE.USER_UPDATED_ERROR)
     } finally {
       setIsSubmitting(false)

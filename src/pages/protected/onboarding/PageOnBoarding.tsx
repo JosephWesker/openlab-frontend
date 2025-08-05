@@ -470,7 +470,7 @@ export default function PageOnBoarding() {
 
   const handleSetUserFromApi = () => {
     setOnboardingCompleted(true)
-    navigate("/")
+    navigate("/protocol")
   }
 
   const completeOnboarding = async () => {
