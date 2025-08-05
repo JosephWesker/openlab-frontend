@@ -190,7 +190,7 @@ export default function Sidebar({ initiativeFull }: { initiativeFull: Initiative
             <div key={index} className="flex items-center space-x-2">
               <Avatar alt="" className="w-8 h-8" src="" />
               <div>
-                <p className="text-sm">{announcement.gSkill}</p>
+                <p className="text-sm max-w-[7rem]">{announcement.gSkill}</p>
               </div>
               {/* {isInApplications(announcement.id) ? ( */}
               {initiativeFull.coFounderAnnouncementId === announcement.id ? (

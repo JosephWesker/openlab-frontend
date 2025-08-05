@@ -1,25 +1,25 @@
-import Drawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import IconButton from "@mui/material/IconButton";
-import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Link from "@mui/material/Link";
-import MenuIcon from "@mui/icons-material/Menu";
-import Logout from "@mui/icons-material/Logout";
-import Close from "@mui/icons-material/Close";
-import Explore from "@mui/icons-material/Explore";
-import Assignment from "@mui/icons-material/Assignment";
-import ViewList from "@mui/icons-material/ViewList";
-import GroupWork from "@mui/icons-material/GroupWork";
-import EditNote from "@mui/icons-material/EditNote";
-import TravelExplore from "@mui/icons-material/TravelExplore";
-import NoteAdd from "@mui/icons-material/NoteAdd";
-import AutoStories from "@mui/icons-material/AutoStories";
-import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
+import Drawer from "@mui/material/Drawer"
+import Box from "@mui/material/Box"
+import { useTheme } from "@mui/material/styles"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import IconButton from "@mui/material/IconButton"
+import SwipeableDrawer from "@mui/material/SwipeableDrawer"
+import Avatar from "@mui/material/Avatar"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import Link from "@mui/material/Link"
+import MenuIcon from "@mui/icons-material/Menu"
+import Logout from "@mui/icons-material/Logout"
+import Close from "@mui/icons-material/Close"
+import Explore from "@mui/icons-material/Explore"
+import Assignment from "@mui/icons-material/Assignment"
+import ViewList from "@mui/icons-material/ViewList"
+import GroupWork from "@mui/icons-material/GroupWork"
+import EditNote from "@mui/icons-material/EditNote"
+import TravelExplore from "@mui/icons-material/TravelExplore"
+import NoteAdd from "@mui/icons-material/NoteAdd"
+import AutoStories from "@mui/icons-material/AutoStories"
+import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings"
 import { useState, useRef, useCallback, useMemo } from "react"
 import { useNavigate, useLocation } from "react-router"
 import { useAuth0 } from "@auth0/auth0-react"
@@ -135,13 +135,8 @@ const bottomMenuItems: MenuItem[] = [
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(false)
-  // const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  // const [showSubMenu, setShowSubMenu] = useState(false)
-  // const [isTransitioning, setIsTransitioning] = useState(false)
   const [clickedItem, setClickedItem] = useState<string | null>(null)
-  // Icono actualmente bajo el cursor (para evitar flicker en background)
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null)
-  // const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const theme = useTheme()
@@ -168,11 +163,6 @@ export const Sidebar = () => {
   }
 
   const handleNavigation = (path: string) => {
-    // Cerrar submenu inmediatamente al navegar
-    // setShowSubMenu(false)
-    // setHoveredItem(null)
-    // setIsTransitioning(false)
-
     if (!isActive(path)) {
       navigate(path)
       if (isMobile) {
@@ -184,11 +174,6 @@ export const Sidebar = () => {
   }
 
   const handleLogout = () => {
-    // Cerrar submenu al hacer logout
-    // setShowSubMenu(false)
-    // setHoveredItem(null)
-    // setIsTransitioning(false)
-
     setTimeout(() => setOpen(false), 200)
     localStorage.removeItem("openlab-onboarding-storage")
     localStorage.removeItem("initiative-storage")
@@ -207,66 +192,7 @@ export const Sidebar = () => {
     }
   }
 
-  // Manejo mejorado del hover con delays y transiciones suaves
-  // const handleMouseEnter = useCallback(
-  //   (itemText: string, hasSubItems: boolean) => {
-  //     if (!hasSubItems || isMobile) return
-
-  //     // Si el item fue clickeado recientemente, no mostrar submenu
-  //     if (clickedItem === itemText) return
-
-  //     // Limpiar cualquier timeout pendiente
-  //     if (hideTimeoutRef.current) {
-  //       clearTimeout(hideTimeoutRef.current)
-  //       hideTimeoutRef.current = null
-  //     }
-  //     if (hoverTimeoutRef.current) {
-  //       clearTimeout(hoverTimeoutRef.current)
-  //       hoverTimeoutRef.current = null
-  //     }
-
-  //     // Si ya está mostrando el mismo submenu, no hacer nada
-  //     if (showSubMenu && hoveredItem === itemText) {
-  //       return
-  //     }
-
-  //     // Si está mostrando otro submenu diferente, cerrar primero y aplicar debounce
-  //     if (showSubMenu && hoveredItem !== itemText) {
-  //       setShowSubMenu(false)
-  //     }
-
-  //     // Usar delay (debounce) de 300 ms para mostrar cualquier submenu
-  //     hoverTimeoutRef.current = setTimeout(() => {
-  //       setHoveredItem(itemText)
-  //       setShowSubMenu(true)
-  //       setIsTransitioning(false)
-  //     }, 300)
-  //   },
-  //   [hoveredItem, showSubMenu, isMobile, clickedItem],
-  // )
-
-  // Nueva bandera para saber si el mouse está sobre el icono o el sub-sidebar
   const mouseOverSidebarOrSub = useRef(false)
-
-  // const handleMouseLeave = useCallback(() => {
-  //   // Limpiar timeout de mostrar
-  //   if (hoverTimeoutRef.current) {
-  //     clearTimeout(hoverTimeoutRef.current)
-  //     hoverTimeoutRef.current = null
-  //   }
-  //   // Marcar que el mouse ya no está sobre el icono
-  //   mouseOverSidebarOrSub.current = false
-  //   // Delay para ocultar - dar tiempo para entrar al submenu
-  //   hideTimeoutRef.current = setTimeout(() => {
-  //     if (!mouseOverSidebarOrSub.current) {
-  //       setShowSubMenu(false)
-  //       setTimeout(() => {
-  //         setHoveredItem(null)
-  //         setIsTransitioning(false)
-  //       }, 150) // Sincronizado con el timeout de exit del Collapse
-  //     }
-  //   }, 100) // Delay más corto para mejor UX
-  // }, [])
 
   const handleMouseEnterSidebarIcon = useCallback(() => {
     mouseOverSidebarOrSub.current = true
@@ -287,38 +213,10 @@ export const Sidebar = () => {
     [clickedItem],
   )
 
-  // const handleSubMenuMouseEnter = useCallback(() => {
-  //   mouseOverSidebarOrSub.current = true
-  //   // Cancelar el ocultamiento si el mouse entra al submenu
-  //   if (hideTimeoutRef.current) {
-  //     clearTimeout(hideTimeoutRef.current)
-  //     hideTimeoutRef.current = null
-  //   }
-  //   if (hoverTimeoutRef.current) {
-  //     clearTimeout(hoverTimeoutRef.current)
-  //     hoverTimeoutRef.current = null
-  //   }
-  // }, [])
-
-  // const handleSubMenuMouseLeave = useCallback(() => {
-  //   mouseOverSidebarOrSub.current = false
-  //   setTimeout(() => {
-  //     if (!mouseOverSidebarOrSub.current) {
-  //       setShowSubMenu(false)
-  //       setTimeout(() => {
-  //         setHoveredItem(null)
-  //         setIsTransitioning(false)
-  //       }, 150)
-  //     }
-  //   }, 100)
-  // }, [])
-
   const SidebarItem = ({ item, isBottom = false }: { item: MenuItem; isBottom?: boolean }) => {
     const active = item.path ? isActive(item.path) : false
     const isHovered = hoveredIcon === item.text
-    // const hasSubItems = Boolean(item.subItems && item.subItems.length > 0)
 
-    // Si es un enlace externo, renderizar un Link
     if (item.external) {
       return (
         <Link
@@ -391,12 +289,10 @@ export const Sidebar = () => {
         onClick={() => handleItemClick(item)}
         onMouseEnter={() => {
           handleMouseEnterSidebarIcon()
-          // handleMouseEnter(item.text, hasSubItems)
           setHoveredIcon(item.text)
         }}
         onMouseLeave={() => {
           handleSidebarIconMouseLeave(item.text)
-          // handleMouseLeave()
         }}
         sx={{
           display: "flex",
@@ -455,147 +351,6 @@ export const Sidebar = () => {
     )
   }
 
-  // Sidebar secundario mejorado con Collapse de Material UI
-  // const SubMenuDrawer = () => {
-  //   if (!hoveredItem || isMobile) return null
-
-  //   const currentItem = mainMenuItems.find((item) => item.text === hoveredItem)
-  //   if (!currentItem?.subItems) return null
-
-  //   return (
-  //     <Slide
-  //       in={showSubMenu && !isTransitioning}
-  //       direction="right"
-  //       timeout={{ enter: 650, exit: 500 }}
-  //       easing={{ enter: "cubic-bezier(0.25, 0.1, 0.25, 1)", exit: "cubic-bezier(0.4, 0, 0.2, 1)" }}
-  //       mountOnEnter
-  //       unmountOnExit
-  //     >
-  //       <Box
-  //         onMouseEnter={handleSubMenuMouseEnter}
-  //         onMouseLeave={handleSubMenuMouseLeave}
-  //         sx={{
-  //           position: "fixed",
-  //           left: 160,
-  //           top: { xs: 72, md: 96 },
-  //           height: { xs: "calc(100vh - 72px)", md: "calc(100vh - 96px)" },
-  //           // zIndex: (theme) => theme.zIndex.drawer,
-  //           zIndex: 10,
-  //           pointerEvents: "none",
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           overflow: "hidden",
-  //         }}
-  //       >
-  //         <Paper
-  //           elevation={3}
-  //           sx={{
-  //             width: 280,
-  //             height: "100vh",
-  //             borderTopRightRadius: 12,
-  //             borderBottomRightRadius: 0,
-  //             display: "flex",
-  //             flexDirection: "column",
-  //             overflow: "hidden",
-  //             borderTopLeftRadius: 0,
-  //             borderBottomLeftRadius: 0,
-  //           }}
-  //           className="bg-default"
-  //         >
-  //           {/* Header sin fade, aparece directamente */}
-  //           <Box
-  //             sx={{
-  //               px: 2,
-  //               py: 1.5,
-  //               backgroundColor: "primary.main",
-  //               color: "white",
-  //               position: "relative",
-  //               overflow: "hidden",
-  //               "&::before": {
-  //                 content: '""',
-  //                 position: "absolute",
-  //                 top: 0,
-  //                 left: 0,
-  //                 right: 0,
-  //                 bottom: 0,
-  //                 background: "linear-gradient(45deg, rgba(255,255,255,0.15) 0%, transparent 70%)",
-  //                 transform: showSubMenu ? "translateX(0)" : "translateX(-100%)",
-  //                 transition: "transform 0.8s ease-out 0.1s",
-  //               },
-  //             }}
-  //           >
-  //             <Typography
-  //               variant="h6"
-  //               sx={{
-  //                 fontWeight: 700,
-  //                 position: "relative",
-  //                 zIndex: 1,
-  //                 whiteSpace: "nowrap",
-  //               }}
-  //             >
-  //               {currentItem.text}
-  //             </Typography>
-  //           </Box>
-
-  //           {/* Lista de elementos sin fade, aparecen directamente con el collapse */}
-  //           <Box
-  //             sx={{
-  //               flexGrow: 1,
-  //               overflowY: "auto",
-  //               overflowX: "hidden",
-  //             }}
-  //           >
-  //             <List sx={{ p: 2 }}>
-  //               {currentItem.subItems.map((subItem) => (
-  //                 <ListItem
-  //                   key={subItem.text}
-  //                   component="button"
-  //                   onClick={() => handleNavigation(subItem.path)}
-  //                   sx={{
-  //                     borderRadius: 2,
-  //                     mb: 1,
-  //                     transition: "background-color 0.2s ease",
-  //                     "&:hover": {
-  //                       bgcolor: "action.hover",
-  //                     },
-  //                     bgcolor: isActive(subItem.path) ? "primary.light" : "transparent",
-  //                     color: isActive(subItem.path) ? "primary.contrastText" : "text.primary",
-  //                     cursor: "pointer",
-  //                   }}
-  //                 >
-  //                   <ListItemIcon
-  //                     sx={{
-  //                       color: "primary.main",
-  //                       minWidth: 40,
-  //                     }}
-  //                   >
-  //                     {subItem.icon}
-  //                   </ListItemIcon>
-  //                   <ListItemText
-  //                     primary={subItem.text}
-  //                     secondary={subItem.description}
-  //                     primaryTypographyProps={{
-  //                       fontWeight: isActive(subItem.path) ? 600 : 500,
-  //                       color: isActive(subItem.path) ? "primary.main" : "text.primary",
-  //                       noWrap: true,
-  //                     }}
-  //                     secondaryTypographyProps={{
-  //                       fontSize: "0.75rem",
-  //                       color: isActive(subItem.path) ? "primary.main" : "text.secondary",
-  //                       noWrap: true,
-  //                     }}
-  //                   />
-  //                 </ListItem>
-  //               ))}
-  //             </List>
-  //           </Box>
-  //         </Paper>
-  //       </Box>
-  //     </Slide>
-  //   )
-  // }
-
-  // User profile section
   const UserProfileSection = () => {
     return (
       <Box
@@ -609,10 +364,6 @@ export const Sidebar = () => {
           width: "100%",
           borderRadius: 3,
           cursor: "pointer",
-          // transition: "background-color 0.2s ease-in-out",
-          // "&:hover": {
-          //   backgroundColor: "rgba(59, 130, 246, 0.1)",
-          // },
         }}
         onClick={() => navigate("/profile")}
       >
@@ -1045,10 +796,10 @@ export const Sidebar = () => {
           variant="permanent"
           anchor="left"
           sx={{
-            width: 180,
+            width: 160,
             flexShrink: 0,
             "& .MuiDrawer-paper": {
-              width: 180,
+              width: 160,
               boxSizing: "border-box",
               overflowX: "hidden",
               transition: "width 0.25s ease-in-out",
@@ -1059,9 +810,6 @@ export const Sidebar = () => {
           {drawer}
         </Drawer>
       )}
-
-      {/* Sidebar secundario para subdivisiones */}
-      {/* <SubMenuDrawer /> */}
     </>
   )
 }

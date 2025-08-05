@@ -28,7 +28,7 @@ const socialUrlValidation = (domain: string | string[], message: string) =>
 
 // Esquema de validación con Zod para el formulario de edición
 export const profileEditSchema = z.object({
-  name: z.string().min(1, "El nombre es requerido"),
+  name: z.string().trim().min(1, "El nombre es requerido"),
   email: z.string().email("Ingresa un email válido").min(1, "El email es requerido"),
   discord: socialUrlValidation("discord.com", "Debe ser un enlace de Discord."),
   github: socialUrlValidation("github.com", "Debe ser un enlace de GitHub."),
@@ -47,7 +47,7 @@ export const profileEditSchema = z.object({
       },
       { message: "Ingresa una URL válida" },
     ),
-  description: z.string().optional(),
+  description: z.string().trim().max(255, "La descripción debe tener menos de 255 caracteres").optional(),
   roles: z.array(z.enum(["INVESTOR", "LEADER", "COLLABORATOR", "COFOUNDER", "ADMIN"])).optional(),
 })
 

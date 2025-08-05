@@ -13,24 +13,19 @@ export function useSlugNavigation() {
   // const { getInitiativeWithFallback } = useInitiativeWithFallback()
   const { setData } = useGlobal()
 
+  // const slugify = (title: string) =>
+  //   title
+  //     .trim() // Remove blank spaces at the end and start
+  //     .normalize("NFD") // Decompose accents
+  //     .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
+  //     .replace(/[^a-zA-Z0-9.:]+/g, "-") // Replace non-alphanumerics (except dot) with hyphen
+  //     .replace(/(^-|-$)/g, "") // Remove leading/trailing hyphens
+
   const slugify = (title: string) =>
     title
-      // .normalize("NFD") // Decompose accents
-      // .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
-      // .toLowerCase()
-      // .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric characters with hyphens
-      // .replace(/(^-|-$)/g, "") // Removes hyphens at the beginning/end
-
-      // .normalize("NFD") // Decompose accents
-      // .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
-      // .replace(/[^a-zA-Z0-9.]+/g, "-") // Allow alphanumeric and dots, replace the rest with hyphen
-      // .replace(/(^-|-$)/g, "") // Remove hyphens at the start and end
-
-    .trim() // Remove blank spaces at the end and start
-    .normalize("NFD") // Decompose accents
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
-    .replace(/[^a-zA-Z0-9.:]+/g, "-") // Replace non-alphanumerics (except dot) with hyphen
-    .replace(/(^-|-$)/g, "") // Remove leading/trailing hyphens
+      .trim()
+      .replace(/[^\p{L}\p{N}.:]+/gu, "-")
+      .replace(/(^-|-$)/g, "")
 
   const goToInitiative = async (
     initiative:

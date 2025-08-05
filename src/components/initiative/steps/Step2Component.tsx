@@ -1,21 +1,22 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from "react"
-import {
-  Box,
-  Typography,
-  Button,
-  Chip,
-  IconButton,
-  useTheme,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Card,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material"
-import { Add, Delete, ExpandMore, Edit } from "@mui/icons-material"
+import { useState, useCallback, useMemo, useRef, useEffect, memo } from "react"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import Chip from "@mui/material/Chip"
+import IconButton from "@mui/material/IconButton"
+import { useTheme } from "@mui/material/styles"
+import Accordion from "@mui/material/Accordion"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import Card from "@mui/material/Card"
+import Dialog from "@mui/material/Dialog"
+import DialogTitle from "@mui/material/DialogTitle"
+import DialogContent from "@mui/material/DialogContent"
+import DialogActions from "@mui/material/DialogActions"
+import Add from "@mui/icons-material/Add"
+import Delete from "@mui/icons-material/Delete"
+import ExpandMore from "@mui/icons-material/ExpandMore"
+import Edit from "@mui/icons-material/Edit"
 import { motion } from "motion/react"
 import { useFormContext, useFieldArray } from "react-hook-form"
 import type { InitiativeFormData } from "@/schemas/initiativeSchema"
@@ -24,26 +25,9 @@ import { useInitiativeForm } from "@/context/InitiativeFormContext"
 
 import { FormTextField } from "./shared/FormTextField"
 import { ConfirmationModal } from "@/components/shared/ConfirmationModal"
+import { PREDEFINED_TAGS } from "@/lib/constants"
 
-const predefinedTags = [
-  "Tecnología",
-  "Sostenibilidad",
-  "Educación",
-  "Salud",
-  "Fintech",
-  "E-commerce",
-  "IA",
-  "Blockchain",
-  "IoT",
-  "Realidad Virtual",
-  "Medio Ambiente",
-  "Social",
-  "Innovación",
-  "Startups",
-  "Emprendimiento",
-]
-
-const Step2Component: React.FC = React.memo(() => {
+const Step2Component = memo(() => {
   const theme = useTheme()
   const {
     formState: { errors },
@@ -177,7 +161,7 @@ const Step2Component: React.FC = React.memo(() => {
     if (
       trimmedTag &&
       !currentTags.includes(trimmedTag) &&
-      !predefinedTags.some((tag) => tag.toLowerCase() === trimmedTag.toLowerCase()) &&
+      !PREDEFINED_TAGS.some((tag) => tag.toLowerCase() === trimmedTag.toLowerCase()) &&
       currentTags.length < 9
     ) {
       setValue("tags", [...currentTags, trimmedTag])
@@ -297,11 +281,11 @@ const Step2Component: React.FC = React.memo(() => {
   // Lista combinada de etiquetas para mostrar
   const allTags = useMemo(() => {
     const currentTags = tagValues.tags
-    const combinedTags = [...predefinedTags]
+    const combinedTags = [...PREDEFINED_TAGS]
 
     // Agregar etiquetas personalizadas que no están en predefinidas
     currentTags.forEach((tag) => {
-      if (!predefinedTags.some((predefined) => predefined.toLowerCase() === tag.toLowerCase())) {
+      if (!PREDEFINED_TAGS.some((predefined) => predefined.toLowerCase() === tag.toLowerCase())) {
         combinedTags.push(tag)
       }
     })

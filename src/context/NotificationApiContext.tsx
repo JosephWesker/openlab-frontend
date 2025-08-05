@@ -1,7 +1,7 @@
 import { createContext, useContext, useMemo, useCallback, useRef, useEffect, useState, type ReactNode } from "react"
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useApi } from "@/hooks/useApi"
-import { API_PATH, KIND_EMOJI, RANDOM_KINDS, type NotificationKind } from "@/lib/constants"
+import { API_PATH, KIND_EMOJI, RANDOM_KINDS, SNACKBAR_MESSAGE, type NotificationKind } from "@/lib/constants"
 import { Snackbar, Fade, Box, Typography, Avatar, useTheme } from "@mui/material"
 import { motion } from "motion/react"
 import { useSlugNavigation } from "@/hooks/useSlugNav"
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router"
 import { useAuthContext } from "@/hooks/useAuthContext"
 import { InitiativeTabs } from "@/interfaces/general-enum"
 import type { Initiative } from "@/interfaces/initiative"
+import { useSnackbar } from "./SnackbarContext"
 
 // Respuesta de la API
 export interface ApiNotification {
@@ -69,7 +70,6 @@ export const useNotifications = () => {
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const { isAuthResolved } = useAuthContext()
-
   const fetchApi = useApi()
   const theme = useTheme()
   const [toast, setToast] = useState<{
@@ -82,6 +82,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = useQueryClient()
   const { goToInitiative } = useSlugNavigation()
   const navigate = useNavigate()
+  const { showSnackbar } = useSnackbar()
 
   // 🔄 1) ref para llevar los timers por tipo
   const preferenceTimers = useRef<Record<NotificationKind, NodeJS.Timeout | undefined>>({
@@ -194,25 +195,12 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
       const NOTIFICATION_REDIRECT = {
         INPROCESS: () => navigate(`/list?tab=my-initiatives&subtab=inprocess`), //
         APROVED: () => navigate(`/list?tab=my-initiatives&subtab=approved`),
-        isNotificationCofunder: () =>
-          goToInitiative(responseNotification.initiative), //
+        isNotificationCofunder: () => goToInitiative(responseNotification.initiative), //
         // isNotificationColaborator: () => navigate(`/list?tab=postulations&subtab=general-skills`),
         isNotificationColaborator: () => handleUpdateInitiative(responseNotification.initiative.id),
-        isNotificationMessage: () =>
-          goToInitiative(
-            responseNotification.initiative,
-            InitiativeTabs.COMMENTS,
-          ),
-        isNotificationUpdate: () =>
-          goToInitiative(
-            responseNotification.initiative,
-            InitiativeTabs.UPDATES,
-          ),
-        isNotificationRoadmap: () =>
-          goToInitiative(
-            responseNotification.initiative,
-            InitiativeTabs.ROADMAP,
-          ),
+        isNotificationMessage: () => goToInitiative(responseNotification.initiative, InitiativeTabs.COMMENTS),
+        isNotificationUpdate: () => goToInitiative(responseNotification.initiative, InitiativeTabs.UPDATES),
+        isNotificationRoadmap: () => goToInitiative(responseNotification.initiative, InitiativeTabs.ROADMAP),
       } satisfies Record<NotificationKind, () => void>
 
       NOTIFICATION_REDIRECT[responseNotification.type ?? "isNotificationCofunder"]()
@@ -235,15 +223,19 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = (await fetchApi({
         path: `${API_PATH.INITIATIVE}/${id}`,
-      })) as Initiative
+      })) as {
+        initiative: Initiative
+      }
 
-      if (response) {
+      if (response?.initiative?.id) {
         navigate("/update#collaborators-profile", {
-          state: { initiative: response, targetStep: 3 },
+          state: { initiative: response.initiative, targetStep: 3 },
         })
+      } else {
+        showSnackbar(SNACKBAR_MESSAGE.NOTIFICATION_COLLABORATOR_REDIRECT_WARNING)
       }
     } catch {
-      /* empty */
+      showSnackbar(SNACKBAR_MESSAGE.NOTIFICATION_COLLABORATOR_ERROR)
     }
   }, [])
 

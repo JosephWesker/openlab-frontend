@@ -24,12 +24,10 @@ import PageDashboardListInitiativeById from "./pages/protected/dashboard/PageDas
 import PageDashboardQuickGuide from "./pages/protected/dashboard/PageDashboardQuickGuide"
 import PageInitiativeDraft from "./pages/protected/dashboard/initiative-draft/PageInitiativeDraft"
 import { GlobalProvider } from "./context/GlobalContext"
-import { useClarityPageview } from "./hooks/useClarityTestSpa"
 
 function App() {
   // const { isLoading } = useAuth0()
   const [isTransitioning, setIsTransitioning] = useState(true)
-  useClarityPageview() // Usamos el hook para enviar "pageviews" a Clarity
 
   // Efecto para manejar solo la transición inicial de la aplicación
   useEffect(() => {

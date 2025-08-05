@@ -27,6 +27,8 @@ export interface Initiative {
       url: string
       img: string
     }[]
+    nameToken?: string
+    symbolToken?: string
   }
   motto: string
   tags: string[]
@@ -71,5 +73,15 @@ export type Collaborator = Initiative["collaborators"][number]
 
 export type InitiativeAdminView = Pick<
   Initiative,
-  "id" | "title" | "img" | "user" | "state" | "motto" | "collaborators" | "votesInFavor" | "votesAgainst" | "externalLinks" | "date"
+  | "id"
+  | "title"
+  | "img"
+  | "user"
+  | "state"
+  | "motto"
+  | "collaborators"
+  | "votesInFavor"
+  | "votesAgainst"
+  | "externalLinks"
+  | "date"
 >

@@ -36,6 +36,7 @@ import { motion } from "motion/react"
 import { FormTextField } from "@/components/initiative/steps/shared/FormTextField"
 import { ProfileImageUpload } from "@/components/profile/ProfileImageUpload"
 import { FullScreenLoader } from "@/components/ui/FullScreenLoader"
+import { ValidationErrorDisplay } from "@/components/ui/ValidationErrorDisplay"
 import { useAuth0 } from "@auth0/auth0-react"
 
 interface SkillsDialogProps {
@@ -52,7 +53,6 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
   const [selectedSkills, setSelectedSkills] = useState<string[]>(initialSkills)
   const [hasSubmitted, setHasSubmitted] = useState(false)
   const [error, setError] = useState("")
-  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { skillsGeneral, skillsTechnical } = useSkillsStore(
     useShallow((state) => ({
       skillsGeneral: state.skills.general,
@@ -66,30 +66,6 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
     setHasSubmitted(false)
     setError("")
   }, [initialSkills, open])
-
-  // const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget)
-  // }
-
-  // const handleCloseMenu = () => {
-  //   setAnchorEl(null)
-  // }
-
-  // const isMenuOpen = Boolean(anchorEl)
-
-  // const handleSkillToggle = (skill: string) => {
-  //   const newSkills = selectedSkills.includes(skill)
-  //     ? selectedSkills.filter((s) => s !== skill)
-  //     : [...selectedSkills, skill]
-
-  //   setSelectedSkills(newSkills)
-  //   if (error) setError("")
-  // }
-
-  // const handleDeleteSkill = (skillToDelete: string) => {
-  //   const newSkills = selectedSkills.filter((skill) => skill !== skillToDelete)
-  //   setSelectedSkills(newSkills)
-  // }
 
   const handleSave = () => {
     setHasSubmitted(true)
@@ -105,8 +81,6 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
     onSave({ existing, new: newlyCreated })
     onClose()
   }
-
-  // const skills = type === "general" ? skillsGeneral : skillsTechnical
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth TransitionComponent={Fade} transitionDuration={400}>
@@ -188,9 +162,6 @@ const SkillsDialog = ({ open, onClose, onSave, title, type, initialSkills }: Ski
 
           {type === "technical" && (
             <Box className="mt-4">
-              {/* <Typography variant="subtitle2" className="font-medium text-gray-600 mb-2">
-                Añade o selecciona habilidades técnicas
-              </Typography> */}
               <Autocomplete
                 multiple
                 freeSolo
@@ -286,18 +257,19 @@ export default function PageDashboardProfileEdit() {
   } = useForm<ProfileEditFormData>({
     resolver: zodResolver(profileEditSchema),
     defaultValues: {
-      name: userFromApi?.name || "",
-      email: userFromApi?.email || "",
-      discord: userFromApi?.social?.discord || "",
-      github: userFromApi?.social?.github || "",
-      linkedin: userFromApi?.social?.linkedIn || "",
-      facebook: userFromApi?.social?.facebook || "",
-      twitter: userFromApi?.social?.twitter || "",
-      instagram: userFromApi?.social?.instagram || "",
-      other: userFromApi?.social?.other || "",
+      name: userFromApi?.name.trim() || "",
+      email: userFromApi?.email.trim() || "",
+      discord: userFromApi?.social?.discord?.trim() || "",
+      github: userFromApi?.social?.github?.trim() || "",
+      linkedin: userFromApi?.social?.linkedIn?.trim() || "",
+      facebook: userFromApi?.social?.facebook?.trim() || "",
+      twitter: userFromApi?.social?.twitter?.trim() || "",
+      instagram: userFromApi?.social?.instagram?.trim() || "",
+      other: userFromApi?.social?.other?.trim() || "",
       roles: userFromApi?.roles || [],
-      description: userFromApi?.description || "",
+      description: userFromApi?.description?.trim() || "",
     },
+    mode: "onSubmit",
   })
 
   // Observar los valores del formulario para los botones "X"
@@ -338,16 +310,16 @@ export default function PageDashboardProfileEdit() {
             method: "PUT",
             body: JSON.stringify({
               id: userFromApi?.id,
-              name: data.name,
+              name: data.name?.trim(),
               profilePic: profileImage || auth0User?.picture || AVATAR_USER_NOT_IMAGE,
-              github: data.github,
-              linkd: data.linkedin,
-              discord: data.discord,
-              facebook: data.facebook,
-              twitter: data.twitter,
-              instagram: data.instagram,
-              other: data.other,
-              description: data.description,
+              github: data.github?.trim(),
+              linkd: data.linkedin?.trim(),
+              discord: data.discord?.trim(),
+              facebook: data.facebook?.trim(),
+              twitter: data.twitter?.trim(),
+              instagram: data.instagram?.trim(),
+              other: data.other?.trim(),
+              description: data.description?.trim(),
             }),
           },
         }),
@@ -376,20 +348,20 @@ export default function PageDashboardProfileEdit() {
 
       setUserFromApi({
         ...userFromApi!,
-        name: data.name,
-        email: data.email,
+        name: data.name?.trim(),
+        email: data.email?.trim(),
         image: profileImage || auth0User?.picture || AVATAR_USER_NOT_IMAGE, // Actualizar la imagen en el contexto
         social: {
           ...userFromApi?.social,
-          github: data.github || null,
-          linkedIn: data.linkedin || null,
-          discord: data.discord || null,
-          facebook: data.facebook || null,
-          twitter: data.twitter || null,
-          instagram: data.instagram || null,
-          other: data.other || null,
+          github: data.github?.trim() || null,
+          linkedIn: data.linkedin?.trim() || null,
+          discord: data.discord?.trim() || null,
+          facebook: data.facebook?.trim() || null,
+          twitter: data.twitter?.trim() || null,
+          instagram: data.instagram?.trim() || null,
+          other: data.other?.trim() || null,
         },
-        description: data.description || null,
+        description: data.description?.trim() || null,
         roles: selectedRoles || [],
         skills: {
           general: generalSkills,
@@ -400,9 +372,8 @@ export default function PageDashboardProfileEdit() {
       showSnackbar(SNACKBAR_MESSAGE.USER_UPDATED)
 
       handleAction("/profile")
-    } catch (error) {
-      console.error("Error al actualizar el perfil:", error)
-      // showSnackbar(SNACKBAR_MESSAGE.USER_UPDATED_ERROR)
+    } catch{
+      showSnackbar(SNACKBAR_MESSAGE.USER_UPDATED_ERROR)
     } finally {
       setIsSubmitting(false)
     }
@@ -579,29 +550,35 @@ export default function PageDashboardProfileEdit() {
                       gap: 3,
                     }}
                   >
-                    <FormTextField
-                      register={register("name")}
-                      label="Nombre del usuario"
-                      placeholder="Nombre"
-                      value={watchedValues.name || ""}
-                      error={errors.name}
-                      onClear={() => setValue("name", "")}
-                      labelFontSize="1.15rem"
-                      legendFontSize="0.875rem"
-                      disabled={isSubmitting}
-                    />
+                    <Box>
+                      <FormTextField
+                        register={register("name")}
+                        label="Nombre del usuario"
+                        placeholder="Nombre"
+                        value={watchedValues.name || ""}
+                        error={errors.name}
+                        onClear={() => setValue("name", "", { shouldValidate: true })}
+                        labelFontSize="1.15rem"
+                        legendFontSize="0.875rem"
+                        disabled={isSubmitting}
+                      />
+                      <ValidationErrorDisplay error={errors.name} />
+                    </Box>
 
-                    <FormTextField
-                      register={register("email")}
-                      label="Correo electrónico"
-                      placeholder="Email"
-                      value={watchedValues.email || ""}
-                      error={errors.email}
-                      onClear={() => setValue("email", "")}
-                      labelFontSize="1.15rem"
-                      legendFontSize="0.875rem"
-                      disabled={true}
-                    />
+                    <Box>
+                      <FormTextField
+                        register={register("email")}
+                        label="Correo electrónico"
+                        placeholder="Email"
+                        value={watchedValues.email || ""}
+                        error={errors.email}
+                        onClear={() => setValue("email", "", { shouldValidate: true })}
+                        labelFontSize="1.15rem"
+                        legendFontSize="0.875rem"
+                        disabled={true}
+                      />
+                      <ValidationErrorDisplay error={errors.email} />
+                    </Box>
 
                     {/* Descripción */}
                     <Box>
@@ -611,13 +588,15 @@ export default function PageDashboardProfileEdit() {
                         placeholder="Describe un poco sobre ti y tus intereses"
                         value={watchedValues.description || ""}
                         error={errors.description}
-                        onClear={() => setValue("description", "")}
+                        onClear={() => setValue("description", "", { shouldValidate: true })}
                         multiline={true}
                         rows={4}
+                        maxLength={255}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.description} />
                     </Box>
                   </Box>
                 </Box>
@@ -646,12 +625,13 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://discord.com/users/usuario"
                         value={watchedValues.discord || ""}
                         error={errors.discord}
-                        onClear={() => setValue("discord", "")}
+                        onClear={() => setValue("discord", "", { shouldValidate: true })}
                         icon={Chat}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.discord} />
                     </motion.div>
 
                     <motion.div
@@ -666,13 +646,14 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://github.com/usuario"
                         value={watchedValues.github || ""}
                         error={errors.github}
-                        onClear={() => setValue("github", "")}
+                        onClear={() => setValue("github", "", { shouldValidate: true })}
                         icon={GitHub}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         inputProps={{ id: "github-input-field" }} // ID para el <input> interno
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.github} />
                     </motion.div>
 
                     <motion.div
@@ -686,12 +667,13 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://linkedin.com/in/usuario"
                         value={watchedValues.linkedin || ""}
                         error={errors.linkedin}
-                        onClear={() => setValue("linkedin", "")}
+                        onClear={() => setValue("linkedin", "", { shouldValidate: true })}
                         icon={LinkedIn}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.linkedin} />
                     </motion.div>
 
                     <motion.div
@@ -705,12 +687,13 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://facebook.com/usuario"
                         value={watchedValues.facebook || ""}
                         error={errors.facebook}
-                        onClear={() => setValue("facebook", "")}
+                        onClear={() => setValue("facebook", "", { shouldValidate: true })}
                         icon={Facebook}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.facebook} />
                     </motion.div>
 
                     <motion.div
@@ -724,12 +707,13 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://twitter.com/usuario"
                         value={watchedValues.twitter || ""}
                         error={errors.twitter}
-                        onClear={() => setValue("twitter", "")}
+                        onClear={() => setValue("twitter", "", { shouldValidate: true })}
                         icon={Twitter}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.twitter} />
                     </motion.div>
 
                     <motion.div
@@ -743,12 +727,13 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://instagram.com/usuario"
                         value={watchedValues.instagram || ""}
                         error={errors.instagram}
-                        onClear={() => setValue("instagram", "")}
+                        onClear={() => setValue("instagram", "", { shouldValidate: true })}
                         icon={Instagram}
                         labelFontSize="1.15rem"
                         legendFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.instagram} />
                     </motion.div>
 
                     <motion.div
@@ -762,11 +747,12 @@ export default function PageDashboardProfileEdit() {
                         placeholder="https://mi-sitio-web.com"
                         value={watchedValues.other || ""}
                         error={errors.other}
-                        onClear={() => setValue("other", "")}
+                        onClear={() => setValue("other", "", { shouldValidate: true })}
                         icon={Web}
                         labelFontSize="0.875rem"
                         disabled={isSubmitting}
                       />
+                      <ValidationErrorDisplay error={errors.other} />
                     </motion.div>
                   </Box>
                 </Box>

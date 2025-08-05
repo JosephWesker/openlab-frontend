@@ -10,7 +10,6 @@ import {
   Container,
   useTheme,
   alpha,
-  Fade,
   IconButton,
   Dialog,
   DialogContent,
@@ -23,7 +22,7 @@ import {
   MobileStepper,
 } from "@mui/material"
 import { Lightbulb, Visibility, Group, Link, Update, CheckCircle, Close, ContactSupport } from "@mui/icons-material"
-import { motion, AnimatePresence } from "motion/react"
+import { motion } from "motion/react"
 import { useInitiativeStore } from "../../stores/initiativeStore"
 import { useStepLogic } from "../../hooks/useStepLogic"
 import NavigationButtons from "./NavigationButtons"
@@ -195,7 +194,15 @@ const InitiativeStepper: React.FC<InitiativeStepperProps> = ({ isEditMode = fals
   }
 
   return (
-    <Container sx={{ py: isMobile ? 2 : 4, position: "relative" }}>
+    <Container
+      sx={{
+        py: {
+          xs: 2,
+          md: 4,
+        },
+        position: "relative",
+      }}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -420,33 +427,31 @@ const InitiativeStepper: React.FC<InitiativeStepperProps> = ({ isEditMode = fals
       </motion.div>
 
       {/* Contenido del paso actual */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
+      {/* <AnimatePresence mode="wait"> */}
+      <motion.div
+        key={currentStep}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
+        {/* <Fade in={true} timeout={500}> */}
+        <Box
+          sx={{
+            mt: isMobile ? 2 : 4,
+            maxWidth: isLargeScreen ? 860 : isTablet ? "100%" : 860,
+            mx: "auto",
+            px: isMobile ? 1 : 0,
+          }}
         >
-          <Fade in={true} timeout={500}>
-            <Box
-              sx={{
-                mt: isMobile ? 2 : 4,
-                maxWidth: isLargeScreen ? 860 : isTablet ? "100%" : 860,
-                mx: "auto",
-                px: isMobile ? 1 : 0,
-              }}
-            >
-              {renderStepContent()}
+          {renderStepContent()}
 
-              {/* NavigationButtons al final de cada paso */}
-              <Box sx={{ mt: isMobile ? 2 : 4 }}>
-                <NavigationButtons stepNumber={currentStep} />
-              </Box>
-            </Box>
-          </Fade>
-        </motion.div>
-      </AnimatePresence>
+          {/* NavigationButtons al final de cada paso */}
+          <Box sx={{ mt: isMobile ? 2 : 4 }}>
+            <NavigationButtons stepNumber={currentStep} />
+          </Box>
+        </Box>
+      </motion.div>
 
       {/* Modal de ayuda con consejos - responsive */}
       <Dialog

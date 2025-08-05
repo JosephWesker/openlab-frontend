@@ -121,6 +121,7 @@ const Step6Component: React.FC = () => {
               formData?.seekingProfiles
                 ?.filter((p) => p.roles.includes("COLLABORATOR"))
                 .map((collaborator) => ({
+                  id: 0,
                   role: "COLLABORATOR",
                   gSkills: collaborator.generalSkills[0],
                   hardSkills: collaborator.technicalSkills,

@@ -47,6 +47,7 @@ import { useAuthContext } from "@/hooks/useAuthContext"
 import type { UserEntity } from "@/interfaces/user"
 import { useSkillsStore } from "@/stores/skillsStore"
 import { FormTextField } from "@/components/initiative/steps/shared/FormTextField"
+import { contentEvents, engagementEvents } from "@/lib/clarityEvents"
 
 interface NavigationButtonsProps {
   stepNumber: number
@@ -208,6 +209,11 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ stepNumber }) => 
         },
       })
 
+      engagementEvents.updatePublished({
+        initiativeId: initiativeData.id.toString(),
+        title: initiativeData.title,
+      })
+
       // tambien se debe enviar el correo de los cofundadores a la API de invitaciones
       const promisedCoFounderEmails =
         updatedData.coFounderEmails?.map((email) =>
@@ -241,15 +247,18 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ stepNumber }) => 
       await Promise.all([...promisedCoFounderEmails, ...promisedPostulationCofounder])
 
       if (initiativeData.state === "draft") {
-        return await fetchApi({
+        await fetchApi({
           path: `${API_PATH.INITIATIVE_DRAFT_TO_PUBLISHED}/${initiativeData.id}`,
           init: {
             method: "POST",
           },
         })
-      }
 
-      return true
+        contentEvents.initiativeProposed({
+          initiativeId: initiativeData.id.toString(),
+          title: initiativeData.title,
+        })
+      }
     },
     onSuccess: () => {
       setModalState("success")
@@ -861,6 +870,11 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ stepNumber }) => 
           init: {
             method: "POST",
           },
+        })
+
+        contentEvents.initiativeProposed({
+          initiativeId: iniciativeResponse.id.toString(),
+          title: body.title,
         })
 
         // tambien se debe enviar el correo de los cofundadores a la API de invitaciones

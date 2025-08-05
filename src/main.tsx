@@ -18,7 +18,7 @@ import App from "./App.tsx"
 import "./index.css"
 import { theme } from "./lib/theme.ts"
 import { SnackbarProvider } from "./context/SnackbarContext.tsx"
-import { clarity } from "react-microsoft-clarity"
+import Clarity from "@microsoft/clarity"
 import { CLARITY_ID } from "./lib/constants.ts"
 
 // import { NotificationProvider } from "./context/NotificationApiContext"
@@ -56,7 +56,7 @@ const queryClient = new QueryClient({
 })
 
 if (process.env.NODE_ENV === "production") {
-  clarity.init(CLARITY_ID) // o process.env.REACT_APP_CLARITY_ID
+  Clarity.init(CLARITY_ID) // o process.env.REACT_APP_CLARITY_ID
 }
 
 createRoot(document.getElementById("root")!).render(

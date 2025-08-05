@@ -8,11 +8,13 @@ import Button from "@mui/material/Button"
 import CircularProgress from "@mui/material/CircularProgress"
 import Paper from "@mui/material/Paper"
 import Stack from "@mui/material/Stack"
+import Chip from "@mui/material/Chip"
 import Close from "@mui/icons-material/Close"
 import GitHub from "@mui/icons-material/GitHub"
 import Work from "@mui/icons-material/Work"
 import People from "@mui/icons-material/People"
 import Hub from "@mui/icons-material/Hub"
+import Token from "@mui/icons-material/Token"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient, useMutation } from "@tanstack/react-query"
@@ -27,6 +29,7 @@ import { useAuthContext } from "@/hooks/useAuthContext"
 import { useSnackbar } from "@/context/SnackbarContext"
 import type { Initiative } from "@/interfaces/initiative"
 import { approveInitiativeSchema, type ApproveInitiativeFormData } from "@/schemas/approveInitiative"
+import { contentEvents } from "@/lib/clarityEvents"
 
 interface ApproveInitiativeModalProps {
   open: boolean
@@ -152,6 +155,11 @@ export const ApproveInitiativeModal: React.FC<ApproveInitiativeModalProps> = ({ 
         throw new Error(msg)
       }
 
+      contentEvents.initiativeActivatedAdmin({
+        initiativeId: initiative.id.toString(),
+        title: initiative.title,
+      })
+
       // ok ⇒ devolvemos el JSON (ya lo tenemos en payload)
       return payload
     },
@@ -191,8 +199,6 @@ export const ApproveInitiativeModal: React.FC<ApproveInitiativeModalProps> = ({ 
     const { githubFront, githubBack, dework, discord, aragon } = initiative.externalLinks
 
     const links = [
-      { label: "GitHub Frontend", url: githubFront, icon: GitHub },
-      { label: "GitHub Backend", url: githubBack, icon: GitHub },
       // Separar la dirección y URL de la DAO de Aragon
       {
         label: "Dirección de la DAO (Aragon)",
@@ -208,6 +214,8 @@ export const ApproveInitiativeModal: React.FC<ApproveInitiativeModalProps> = ({ 
         description: "URL de la web para participar en la gobernanza de la DAO",
         isAddressOnly: false,
       },
+      { label: "GitHub Frontend", url: githubFront, icon: GitHub },
+      { label: "GitHub Backend", url: githubBack, icon: GitHub },
       { label: "Dework", url: dework, icon: Work },
       { label: "Discord", url: discord, icon: People },
     ]
@@ -279,18 +287,77 @@ export const ApproveInitiativeModal: React.FC<ApproveInitiativeModalProps> = ({ 
                   : "Configura los enlaces a las herramientas que se activarán una vez aprobada la iniciativa."}
               </Typography>
               {isViewMode ? (
-                <Stack spacing={2}>
-                  {linksToDisplay.map((link) => (
-                    <LinkDisplay
-                      key={link.label}
-                      label={link.label}
-                      url={link.url}
-                      icon={link.icon}
-                      onCopy={handleCopy}
-                      description={link.description}
-                      isAddressOnly={link.isAddressOnly}
-                    />
-                  ))}
+                <Stack>
+                  {/* Información del Token */}
+                  {(initiative?.externalLinks?.nameToken || initiative?.externalLinks?.symbolToken) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      <Box sx={{ mb: 2 }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                          <Token sx={{ color: "primary.main" }} />
+                          <Typography variant="body1" fontWeight={500} color="primary.main">
+                            Información del Token
+                          </Typography>
+                        </Box>
+                        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                          {initiative?.externalLinks?.nameToken && (
+                            <Chip
+                              label={`Nombre: ${initiative.externalLinks.nameToken}`}
+                              variant="filled"
+                              sx={{
+                                borderColor: "primary.main",
+                                bgcolor: "primary.main",
+                                color: "white",
+                                fontWeight: 500,
+                                "&:hover": {
+                                  bgcolor: "primary.main",
+                                },
+                              }}
+                              onClick={() =>
+                                handleCopy(initiative.externalLinks.nameToken!, "Nombre del token copiado")
+                              }
+                            />
+                          )}
+                          {initiative?.externalLinks?.symbolToken && (
+                            <Chip
+                              label={`Símbolo: ${initiative.externalLinks.symbolToken}`}
+                              variant="filled"
+                              sx={{
+                                borderColor: "primary.main",
+                                bgcolor: "primary.main",
+                                color: "white",
+                                fontWeight: 500,
+                                "&:hover": {
+                                  bgcolor: "primary.main",
+                                },
+                              }}
+                              onClick={() =>
+                                handleCopy(initiative.externalLinks.symbolToken!, "Símbolo del token copiado")
+                              }
+                            />
+                          )}
+                        </Box>
+                      </Box>
+                    </motion.div>
+                  )}
+
+                  {/* Enlaces de la Iniciativa */}
+                  <Stack spacing={2}>
+                    {linksToDisplay.map((link) => (
+                      <LinkDisplay
+                        key={link.label}
+                        label={link.label}
+                        url={link.url}
+                        icon={link.icon}
+                        onCopy={handleCopy}
+                        description={link.description}
+                        isAddressOnly={link.isAddressOnly}
+                      />
+                    ))}
+                  </Stack>
                 </Stack>
               ) : (
                 <Box

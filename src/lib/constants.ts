@@ -26,6 +26,11 @@ export const SNACKBAR_MESSAGE = {
     message: "Perfil actualizado correctamente",
     severity: "success",
   },
+  USER_UPDATED_ERROR: {
+    title: "Error al actualizar el perfil",
+    message: "Error al actualizar el perfil",
+    severity: "error",
+  },
   GET_PROFILE_ERROR: {
     title: "Error al obtener el perfil",
     message: "Error al obtener el perfil",
@@ -39,6 +44,16 @@ export const SNACKBAR_MESSAGE = {
   AUTH_NOT_AUTHENTICATED: {
     title: "Usuario no autenticado",
     message: "Usuario no autenticado",
+    severity: "warning",
+  },
+  NOTIFICATION_COLLABORATOR_ERROR: {
+    title: "Error al obtener la iniciativa desde la respuesta de la API get initiative",
+    message: "No se pudo redirigir a la iniciativa",
+    severity: "error",
+  },
+  NOTIFICATION_COLLABORATOR_REDIRECT_WARNING: {
+    title: "Error al obtener la iniciativa desde la respuesta de la API get initiative",
+    message: "No se pudo redirigir a la iniciativa",
     severity: "warning",
   },
 } as const satisfies Readonly<{
@@ -203,3 +218,21 @@ export const NOTIFICATION_KINDS = {
   isNotificationUpdate: "Actualizacion de Iniciativa",
   isNotificationRoadmap: "Actualizacion de Roadmap de Iniciativa",
 } as const satisfies Partial<Record<NotificationKind, string>>
+
+export const PREDEFINED_TAGS = [
+  "Tecnología",
+  "Sostenibilidad",
+  "Educación",
+  "Salud",
+  "Fintech",
+  "E-commerce",
+  "IA",
+  "Blockchain",
+  "IoT",
+  "Realidad Virtual",
+  "Medio Ambiente",
+  "Social",
+  "Innovación",
+  "Startups",
+  "Emprendimiento",
+]

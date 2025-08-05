@@ -1,11 +1,12 @@
 import { Tooltip } from "@mui/material"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
-import logoAragonImg from '@/assets/images/initiative-detail/logo_aragon.svg'
-import logoDeworkImg from '@/assets/images/initiative-detail/logo_dework.png'
-import logoDiscordImg from '@/assets/images/initiative-detail/logo_discord.svg'
-import logoGithubImg from '@/assets/images/initiative-detail/logo_github.svg'
+import logoAragonImg from "@/assets/images/initiative-detail/logo_aragon.svg"
+import logoDeworkImg from "@/assets/images/initiative-detail/logo_dework.png"
+import logoDiscordImg from "@/assets/images/initiative-detail/logo_discord.svg"
+import logoGithubImg from "@/assets/images/initiative-detail/logo_github.svg"
 import { ARAGON_LINK, TOKEN_LINK } from "@/lib/constants"
+import { communityEvents } from "@/lib/clarityEvents"
 
 interface ChipWithTooltipProps {
   appName: string
@@ -13,72 +14,78 @@ interface ChipWithTooltipProps {
 }
 
 // Initiative tools dictionary
-const PLATFORM_STYLES: Record<string, {
-  icon: string
-  bgColor: string
-  textColor: string
-  label: string
-}> = {
+const PLATFORM_STYLES: Record<
+  string,
+  {
+    icon: string
+    bgColor: string
+    textColor: string
+    label: string
+  }
+> = {
   Dework: {
     icon: logoDeworkImg,
     bgColor: "#8247e5",
     textColor: "#ffffff",
-    label: "Dework"
+    label: "Dework",
   },
   Discord: {
     icon: logoDiscordImg,
     bgColor: "#5865F2",
     textColor: "#ffffff",
-    label: "Discord"
+    label: "Discord",
   },
   Aragon: {
     icon: logoAragonImg,
     bgColor: "#003BF5",
     textColor: "#ffffff",
-    label: "DAO"
+    label: "DAO",
   },
   Token: {
     icon: logoAragonImg,
     bgColor: "#003BF5",
     textColor: "#ffffff",
-    label: "Token"
+    label: "Token",
   },
   GitHubBack: {
     icon: logoGithubImg,
     bgColor: "#24292f",
     textColor: "#ffffff",
-    label: "GitHub Back"
+    label: "GitHub Back",
   },
   GitHubFront: {
     icon: logoGithubImg,
     bgColor: "#24292f",
     textColor: "#ffffff",
-    label: "GitHub Front"
-  }
+    label: "GitHub Front",
+  },
 }
 
-export default function ChipWithTooltip({
-  appName,
-  url
-}: ChipWithTooltipProps) {
+export default function ChipWithTooltip({ appName, url }: ChipWithTooltipProps) {
   const { icon, bgColor, textColor, label } = PLATFORM_STYLES[appName] ?? {
     icon: "",
     bgColor: "#3D7BFF",
     textColor: "#ffffff",
-    label: 'Desconocido'
+    label: "Desconocido",
   }
 
-  if (appName === 'Aragon'){
+  if (appName === "Aragon") {
     url = ARAGON_LINK(url)
   }
 
-  if (appName === 'Token'){
+  if (appName === "Token") {
     url = TOKEN_LINK(url)
+  }
+
+  const handleClick = () => {
+    if (["Discord", "GitHubBack", "GitHubFront", "Dework", "Aragon"].includes(appName)) {
+      communityEvents.externalLinkClick({ platform: appName })
+    }
   }
 
   return (
     <Tooltip title={url} placement="top" arrow>
-      <a href={url} target="_blank" rel="noopener noreferrer">
+      <a href={url} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
         <Box
           className="flex items-center w-fit gap-2 rounded-full pl-1 pr-3 py-1 text-sm cursor-pointer transition hover:opacity-90"
           sx={{ backgroundColor: bgColor, color: textColor }}

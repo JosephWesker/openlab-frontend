@@ -19,6 +19,7 @@ import { VoteResponseDTO, type Initiative, type VoteRequestDTO } from "../../../
 import Modal from "@mui/material/Modal"
 // import Button from "@mui/material/Button"
 import ButtonBase from "@mui/material/ButtonBase"
+import { engagementEvents } from "@/lib/clarityEvents"
 // import { useInitiativeApi } from "../../../stores/initiativeActionsStore"
 // import { submitVote } from "../../../stores/initiativeActionsStore"
 // import { useApiClient } from "@/utils/useApiClient"
@@ -74,6 +75,12 @@ export default function VoteModal({ initiative }: { initiative: Initiative }) {
         // console.error('Error detallado:', parsed.error.errors)
         throw new Error('Ocurrió un error inesperado al votar')
       }
+
+      engagementEvents.voteCast({
+        initiativeId: initiative.id.toString(),
+        title: initiative.title,
+        inFavor,
+      })
 
       setVotesInFavor(parsed.data[0].votesInFavor)
       setVotesAgainst(parsed.data[0].votesAgainst)

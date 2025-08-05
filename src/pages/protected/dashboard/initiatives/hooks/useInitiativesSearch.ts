@@ -4,6 +4,7 @@ import type { InitiativePaged } from '../../initiative/schemas/initiativeSchema'
 // import { useDebounce } from './useDebounce'
 import { API_PATH } from '@/lib/constants'
 import { useDebounce } from '@/hooks/useDebounce'
+import { communityEvents } from '@/lib/clarityEvents'
 
 export function useSearchInitiatives(searchQuery: string, size = 6) {
   const { getIdTokenClaims } = useAuth0()
@@ -27,6 +28,9 @@ export function useSearchInitiatives(searchQuery: string, size = 6) {
       if (!res.ok) {
         throw new Error(`Error ${res.status}`)
       }
+
+      // registro de evento de busqueda
+      communityEvents.searchUsed({ searchQuery: debouncedQuery })
 
       return res.json()
     },

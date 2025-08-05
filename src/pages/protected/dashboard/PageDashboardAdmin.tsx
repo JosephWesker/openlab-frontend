@@ -61,7 +61,7 @@ import { EmptyState } from "@/components/shared/EmptyState"
 import { ErrorState } from "@/components/shared/ErrorState"
 import { useSnackbar } from "@/context/SnackbarContext"
 import type { Initiative, InitiativeAdminView } from "@/interfaces/initiative"
-import { ApproveInitiativeModal } from "../../../components/admin/ApproveInitiativeModal"
+import { ApproveInitiativeModal } from "@/components/admin/ApproveInitiativeModal"
 import { useSlugNavigation } from "@/hooks/useSlugNav"
 import { useDebounce } from "./initiatives/hooks/useDebounce"
 import { ConfirmationModal } from "@/components/shared/ConfirmationModal"
@@ -203,7 +203,7 @@ export default function PageDashboardAdmin() {
     queryFn: async () => {
       // 1. Fetch primera página para saber el total
       const firstPage = (await fetchApi({
-        path: `${API_PATH.INITIATIVE_ADMIN}?state=${statusFilter}&page=0&size=12`,
+        path: `${API_PATH.INITIATIVE_ADMIN}?page=0&size=12`,
       })) as PaginatedInitiativesResponse
       const { totalPages, content } = firstPage
       const allInitiatives = [...content]
@@ -214,7 +214,7 @@ export default function PageDashboardAdmin() {
         for (let page = 1; page < totalPages; page++) {
           promises.push(
             fetchApi({
-              path: `${API_PATH.INITIATIVE_ADMIN}?state=${statusFilter}&page=${page}&size=12`,
+              path: `${API_PATH.INITIATIVE_ADMIN}?page=${page}&size=12`,
             }),
           )
         }

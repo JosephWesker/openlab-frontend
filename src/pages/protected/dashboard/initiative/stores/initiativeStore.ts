@@ -1,19 +1,28 @@
 import { API_PATH } from "@/lib/constants"
 import { useApiClient } from "@/utils/useApiClient"
-import type { ApplicationsResponseDTO, Initiative, InitiativeApplyCofoundingRequestDTO, InitiativeApplyRequestDTO, UserResponseDTO, VoteRequestDTO, VoteResponseDTO } from "../schemas/initiativeSchema"
+import type {
+  ApplicationsResponseDTO,
+  Initiative,
+  InitiativeApplyCofoundingRequestDTO,
+  InitiativeApplyRequestDTO,
+  UserResponseDTO,
+  VoteRequestDTO,
+  VoteResponseDTO,
+} from "../schemas/initiativeSchema"
+import type { UpdateUserRequestDTO, UpdateUserResponseDTO } from "../schemas/userSchema"
 
 export function useInitiativeApi() {
   const apiClient = useApiClient()
 
   async function getInitiative(initiativeId: number): Promise<Initiative> {
     return await apiClient<Initiative>(`${API_PATH.INITIATIVE}/${initiativeId}`, {
-      method: "GET"
+      method: "GET",
     })
   }
 
   async function getInitiativeByTitle(initiativeTitle: string): Promise<Initiative> {
     return await apiClient<Initiative>(`${API_PATH.INITIATIVE_TITLE}/${initiativeTitle}`, {
-      method: "GET"
+      method: "GET",
     })
   }
 
@@ -22,15 +31,23 @@ export function useInitiativeApi() {
       method: "POST",
       body: JSON.stringify({
         initiativeId: Number(voteRequestDTO.initiativeId),
-        inFavor: voteRequestDTO.inFavor
-      } as VoteRequestDTO)
+        inFavor: voteRequestDTO.inFavor,
+      } as VoteRequestDTO),
     })
   }
 
   async function getUser(id: number): Promise<UserResponseDTO> {
     return await apiClient<UserResponseDTO>(`${API_PATH.USER}/${id}`, {
-      method: "GET"
+      method: "GET",
       // queryParams: { id: String(id) }
+    })
+  }
+
+  async function updateUser(user: UpdateUserRequestDTO): Promise<UpdateUserResponseDTO> {
+    return await apiClient<UpdateUserResponseDTO>(`${API_PATH.USER}`, {
+      method: "PUT",
+      // queryParams: { id: String(id) }
+      body: JSON.stringify(user),
     })
   }
 
@@ -39,28 +56,33 @@ export function useInitiativeApi() {
       method: "POST",
       body: JSON.stringify({
         initiativeId,
-        role
+        role,
       } as InitiativeApplyRequestDTO),
-      parseAs: 'text'
+      parseAs: "text",
     })
   }
 
-  async function initiativeApplyCofounding(announcementId: number, description: string, gSkills: string, hardSkills: string[]): Promise<string> {
+  async function initiativeApplyCofounding(
+    announcementId: number,
+    description: string,
+    gSkills: string,
+    hardSkills: string[],
+  ): Promise<string> {
     return await apiClient<string>(API_PATH.INITIATIVE_APPLY_NOTICE, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         announcementId,
         description,
         gSkills,
-        hardSkills
+        hardSkills,
       } as InitiativeApplyCofoundingRequestDTO),
-      parseAs: 'text'
+      parseAs: "text",
     })
   }
 
   async function getInitiativeApplications(initiativeId: number): Promise<ApplicationsResponseDTO> {
     return await apiClient<ApplicationsResponseDTO>(`${API_PATH.INITIATIVE_APPLICATIONS}/${initiativeId}`, {
-      method: "GET"
+      method: "GET",
     })
   }
 
@@ -71,6 +93,7 @@ export function useInitiativeApi() {
     initiativeApplyCofounding,
     getInitiative,
     getInitiativeByTitle,
-    getInitiativeApplications
+    getInitiativeApplications,
+    updateUser,
   }
 }

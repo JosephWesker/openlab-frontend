@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router"
-import { Box } from "@mui/material"
+import { Box, Paper } from "@mui/material"
 import { Sidebar } from "@/components/dashboard/Sidebar"
 import { Header } from "@/components/dashboard/Header"
 import { useAuthContext } from "@/hooks/useAuthContext"
@@ -20,42 +20,61 @@ const LayoutDashboard = () => {
       <Sidebar />
 
       {/* Contenedor principal con header y contenido */}
-      {/* <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column",
-      overflow: "hidden" }}> */}
       <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
         {/* Header */}
         <Header />
 
         {/* Contenido principal */}
-        <Box
+        <Paper
+          elevation={3}
           component="main"
           sx={{
-            flexGrow: 1,
-            // p: { xs: 2, md: 0.5 },
-            pr: { xs: 2, md: 3 },
-            pb: { xs: 2, md: 3 },
-            // overflowY: "auto",
-            // overflowX: "hidden",
-            position: "relative",
+            mb: { xs: 2, md: 3 },
+            mr: { xs: 2, md: 3 },
+            mt: { xs: 10, md: 13 },
+            ml: { xs: 0, md: 1 },
+            p: {
+              xs: 2,
+              md: 3,
+            },
+            overflowY: "scroll",
+            borderRadius: "32px",
+            backgroundColor: "white",
+            flex: 1,
             scrollbarGutter: "stable",
+            "&::-webkit-scrollbar": {
+              width: "8px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "rgba(0,0,0,0.2)",
+              borderRadius: "4px",
+            },
           }}
         >
-          <div className="relative w-full min-h-full flex flex-col pt-15 [@media(min-width:900px)]:pt-24">
-            <div
-              style={{
-                borderRadius: "24px",
-                backgroundColor: "white",
-                boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.12)",
-                width: "100%",
-                minHeight: "calc(100vh - 180px)",
-              }}
-            >
-              <Outlet />
-            </div>
-          </div>
-        </Box>
+          {/* <div className="relative w-full min-h-full flex flex-1 pl-1 flex-col pt-15 [@media(min-width:900px)]:pt-26 bg-green-500"> */}
+          {/* <Paper
+            elevation={4}
+            sx={{
+              borderRadius: "32px",
+              width: "100%",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              scrollbarGutter: "stable",
+              pt: {
+                xs: 15,
+                md: 26,
+              },
+            }}
+          > */}
+          <Outlet />
+          {/* </Paper> */}
+          {/* </div> */}
+        </Paper>
       </Box>
-      {/* <WhatsAppFloatingButton /> */}
     </Box>
   )
 }

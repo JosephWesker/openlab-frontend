@@ -44,16 +44,10 @@ const ErrorSimulator = () => {
   // }
 
   // Simula un error 404 usando useApi
-  const throw404Error = async () => {
-    try {
-      await fetchApi({
-        path: "/initiative/203", // Esta ruta debería devolver 404
-        init: { method: "GET" },
-      })
-    } catch (error) {
-      console.log("Error capturado en la simulación:", error)
-    }
-  }
+  const throw404Error = async () =>
+    await fetchApi({
+      path: "/initiative/203", // Esta ruta debería devolver 404
+    })
 
   // Simula un error 404 usando FETCH DIRECTO (sin useApi) - PRUEBA INTERCEPTOR GLOBAL
   // const throwGlobal404Error = async () => {

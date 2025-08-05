@@ -34,6 +34,7 @@ import type { RoleEntity } from "@/interfaces/user"
 import collaboratorImage from "@/assets/images/onboarding/collaborator.png"
 import leaderImage from "@/assets/images/onboarding/leader.png"
 import investorImage from "@/assets/images/onboarding/investor.png"
+import { communityEvents } from "@/lib/clarityEvents"
 
 // Esquema de validación con Zod
 const userProfileSchema = z.object({
@@ -88,7 +89,7 @@ const Step1 = ({ onContinue, onBack, showBack, name }: StepProps & { name?: stri
         )}
 
         <Box className="w-full text-center mb-8">
-          <Typography variant="h4" component="h1" className="font-bold my-6">
+          <Typography variant="h4" component="h1" className="font-bold my-6 px-10 text-primary">
             ¡Bienvenido/a a OpenLab, {name}!
           </Typography>
 
@@ -187,16 +188,16 @@ const Step2 = ({ onContinue, onBack, showBack }: StepProps) => {
 
   return (
     <Fade in={true} timeout={800}>
-      <Box className="flex flex-col items-center max-w-4xl mx-auto">
+      <Box className="flex flex-col items-center max-w-4xl mx-auto relative mt-6">
         {showBack && (
-          <Box className="self-start mb-4">
+          <Box className="absolute top-0 left-0">
             <IconButton onClick={onBack} color="primary">
               <ArrowBackIcon />
             </IconButton>
           </Box>
         )}
 
-        <Typography variant="h4" component="h1" className="font-bold mb-6 text-center">
+        <Typography variant="h4" component="h1" className="font-bold mb-6 text-center text-primary px-10">
           ¿Cómo te gustaría participar en OpenLab?
         </Typography>
 
@@ -287,16 +288,16 @@ const Step3 = ({ onContinue, onBack, showBack }: StepProps) => {
 
   return (
     <Fade in={true} timeout={800}>
-      <Box className="flex flex-col items-center max-w-2xl mx-auto">
+      <Box className="flex flex-col items-center max-w-2xl mx-auto relative">
         {showBack && (
-          <Box className="self-start mb-4">
+          <Box className="absolute top-0 left-0">
             <IconButton onClick={onBack} color="primary">
               <ArrowBackIcon />
             </IconButton>
           </Box>
         )}
 
-        <Typography variant="h4" component="h1" className="font-bold mb-6 text-center">
+        <Typography variant="h4" component="h1" className="font-bold mb-6 text-center px-10 text-primary">
           Tus Habilidades Generales
         </Typography>
 
@@ -329,38 +330,22 @@ const Step3 = ({ onContinue, onBack, showBack }: StepProps) => {
             noOptionsText="Selecciona de la lista"
             ListboxProps={{
               style: {
-                maxHeight: '25vh',
+                maxHeight: "25vh",
               },
               sx: {
                 // Scrollbar personalizado
-                '&::-webkit-scrollbar': {
-                  width: '10px',
+                "&::-webkit-scrollbar": {
+                  width: "10px",
                 },
-                '&::-webkit-scrollbar-track': {
-                  backgroundColor: 'rgba(0,0,0,0.1)',
-                  borderRadius: '5px',
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "rgba(0,0,0,0.1)",
+                  borderRadius: "5px",
                 },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: 'primary.main',
-                  borderRadius: '5px',
-                  '&:hover': {
-                    backgroundColor: 'primary.dark',
-                  },
-                },
-                // Estilos de las opciones
-                '& .MuiAutocomplete-option': {
-                  // color: 'primary.main',
-                  // fontWeight: 500,
-                  '&:hover': {
-                    backgroundColor: 'primary.light',
-                    // color: 'primary.dark',
-                  },
-                  '&[aria-selected="true"]': {
-                    backgroundColor: 'primary.light',
-                    // color: 'primary.dark',
-                    // '&:hover': {
-                    //   backgroundColor: 'primary.dark',
-                    // },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "primary.main",
+                  borderRadius: "5px",
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
                   },
                 },
               },
@@ -379,25 +364,25 @@ const Step3 = ({ onContinue, onBack, showBack }: StepProps) => {
                 inputProps={{
                   ...params.inputProps,
                   style: {
-                    cursor: 'pointer',
-                    caretColor: 'transparent',
+                    cursor: "pointer",
+                    caretColor: "transparent",
                   },
                 }}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    cursor: 'pointer',
-                    '&:hover': {
-                      cursor: 'pointer',
+                  "& .MuiOutlinedInput-root": {
+                    cursor: "pointer",
+                    "&:hover": {
+                      cursor: "pointer",
                     },
                   },
-                  '& .MuiInputBase-input': {
-                    cursor: 'pointer !important',
-                    '&:hover': {
-                      cursor: 'pointer !important',
+                  "& .MuiInputBase-input": {
+                    cursor: "pointer !important",
+                    "&:hover": {
+                      cursor: "pointer !important",
                     },
                   },
-                  '& .MuiAutocomplete-inputRoot': {
-                    cursor: 'pointer',
+                  "& .MuiAutocomplete-inputRoot": {
+                    cursor: "pointer",
                   },
                 }}
               />
@@ -415,21 +400,21 @@ const Step3 = ({ onContinue, onBack, showBack }: StepProps) => {
                     onClick={(e) => {
                       // Solo toggle dropdown si no se hizo clic en la X
                       const target = e.target as HTMLElement
-                      if (!target.closest('.MuiChip-deleteIcon')) {
+                      if (!target.closest(".MuiChip-deleteIcon")) {
                         setAutocompleteOpen(!autocompleteOpen)
                       }
                     }}
                     onDelete={(e) => {
                       e.stopPropagation()
-                      const newSelected = selectedSkills.filter(skill => skill !== option)
+                      const newSelected = selectedSkills.filter((skill) => skill !== option)
                       setSelectedSkills(newSelected)
                       if (error) setError("")
                     }}
                     sx={{
-                      '& .MuiChip-deleteIcon': {
-                        color: 'primary.main',
-                        '&:hover': {
-                          color: 'primary.dark',
+                      "& .MuiChip-deleteIcon": {
+                        color: "primary.main",
+                        "&:hover": {
+                          color: "primary.dark",
                         },
                       },
                     }}
@@ -471,69 +456,29 @@ export default function PageOnBoarding() {
   const fetchApi = useApi()
   const setSkills = useSkillsStore((state) => state.setSkills)
 
-  // const [loadingSkills, setLoadingSkills] = useState(true)
-  // const [hasSkills, setHasSkills] = useState(false)
-
-  // Get user skills
   useEffect(() => {
     const loadSkills = async () => {
       try {
         setSkills(fetchApi)
-        // const state = useSkillsStore.getState()
-        // console.log('state.skills', state.skills)
-        // if ((state.skills.general.length + state.skills.technical.length) > 0) {
-        //   setHasSkills(true)
-        // }
       } catch (err) {
         console.error("Error cargando skills:", err)
-      } finally {
-        // setLoadingSkills(false)
       }
     }
 
     loadSkills()
   }, [])
 
-  // useEffect(() => {
-  //   if (!loadingSkills && hasSkills) {
-  //     navigate("/") // o navigate("/dashboard")
-  //   }
-  // }, [loadingSkills, hasSkills, navigate])
-
-  // if (loadingSkills) {
-  //   return (
-  //     <Container maxWidth="lg" className="min-h-screen flex items-center justify-center">
-  //       <CircularProgress />
-  //     </Container>
-  //   )
-  // }
-
-  // Redirigir al dashboard después de actualizar el estado
   const handleSetUserFromApi = () => {
     setOnboardingCompleted(true)
     navigate("/")
   }
 
-  // Para manejar la finalización del onboarding
   const completeOnboarding = async () => {
     setIsLoading(true)
 
-    // Solución: Obtenemos el estado más reciente directamente del store
     const { data: currentOnboardingData, clearData } = useOnboardingStore.getState()
 
     try {
-      // if (currentOnboardingData.newlyCreatedGeneralSkills?.length) {
-      //   await fetchApi({
-      //     path: API_PATH.USER_SKILL,
-      //     init: {
-      //       method: "POST",
-      //       body: JSON.stringify({
-      //         skills: currentOnboardingData.newlyCreatedGeneralSkills,
-      //       }),
-      //     },
-      //   })
-      // }
-
       await Promise.all([
         currentOnboardingData.name
           ? fetchApi({
@@ -586,7 +531,8 @@ export default function PageOnBoarding() {
         },
       })
 
-      // Limpiar el store después de enviar exitosamente
+      communityEvents.onboardingCompleted()
+
       clearData()
     } finally {
       setIsLoading(false)
@@ -594,7 +540,6 @@ export default function PageOnBoarding() {
     }
   }
 
-  // Manejar el paso a la siguiente pantalla
   const handleContinue = () => {
     if (activeStep === 2) {
       completeOnboarding()
@@ -603,23 +548,14 @@ export default function PageOnBoarding() {
     }
   }
 
-  // Manejar volver al paso anterior
   const handleBack = () => {
     setActiveStep((prev) => Math.max(0, prev - 1))
   }
 
-  // Renderizado condicional de los pasos
   const renderStep = () => {
     switch (activeStep) {
       case 0:
-        return (
-          <Step1
-            onContinue={handleContinue}
-            onBack={handleBack}
-            showBack={false} // No hay paso anterior en el primer paso
-            name={userFromApi?.name}
-          />
-        )
+        return <Step1 onContinue={handleContinue} onBack={handleBack} showBack={false} name={userFromApi?.name} />
       case 1:
         return <Step2 onContinue={handleContinue} onBack={handleBack} showBack={true} />
       case 2:
@@ -630,12 +566,12 @@ export default function PageOnBoarding() {
   }
 
   return (
-    <Container maxWidth="lg" className="min-h-screen flex flex-col py-8">
+    <Container maxWidth="lg" className="min-h-screen flex flex-col p-6">
       <Box className="flex justify-center mb-6">
         <img src={openLabLogo} alt="OpenLab Logo" className="h-12" />
       </Box>
 
-      <Box className="mb-12">
+      <Box>
         <Stepper activeStep={activeStep}>
           <Step>
             <StepLabel>Paso 1</StepLabel>
@@ -659,7 +595,7 @@ export default function PageOnBoarding() {
         )}
       </Box>
 
-      <Box className="mt-auto text-center py-6">
+      <Box className="text-center pt-2">
         <Typography variant="body2" color="textSecondary">
           © {new Date().getFullYear()} OpenLab. All rights reserved.
         </Typography>

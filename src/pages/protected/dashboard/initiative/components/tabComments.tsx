@@ -17,7 +17,8 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Card from "@mui/material/Card"
 import IconButton from "@mui/material/IconButton"
-import commentsImg from '@/assets/images/initiative-detail/comments.svg'
+import commentsImg from "@/assets/images/initiative-detail/comments.svg"
+import { engagementEvents } from "@/lib/clarityEvents"
 
 // interface SimpleUser {
 //   name?: string
@@ -76,55 +77,54 @@ const InfiniteScrollSpinner: React.FC<{ size?: number }> = ({ size = 50 }) => {
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, index }) => {
   return (
+    <Paper
+      key={index}
+      elevation={2}
+      sx={{
+        p: 2,
+        mb: 2,
+        backgroundColor: "background.paper",
+        borderRadius: 2,
+        borderLeft: "4px solid",
+        borderLeftColor: "primary.main",
+        transition: "all 0.2s ease",
+        "&:hover": {
+          elevation: 4,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        },
+      }}
+    >
+      {/* Fecha arriba como header */}
+      <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.75rem", mb: 1, display: "block" }}>
+        {/* Hace 8 horas */}
+        {comment.time}
+      </Typography>
 
-      <Paper
-        key={index}
-        elevation={2}
-        sx={{
-          p: 2,
-          mb: 2,
-          backgroundColor: "background.paper",
-          borderRadius: 2,
-          borderLeft: "4px solid",
-          borderLeftColor: "primary.main",
-          transition: "all 0.2s ease",
-          "&:hover": {
-            elevation: 4,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-          },
-        }}
-      >
-        {/* Fecha arriba como header */}
-        <Typography variant="caption" color="text.secondary" sx={{ fontSize: "0.75rem", mb: 1, display: "block" }}>
-          {/* Hace 8 horas */}
-          {comment.time}
+      {/* Avatar + Nombre en línea horizontal */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+        <Avatar
+          src={comment.user.profilePic}
+          sx={{
+            width: 30,
+            height: 30,
+            bgcolor: "primary.light",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+          }}
+        >
+          {comment.user.name}
+        </Avatar>
+
+        <Typography variant="subtitle2" fontWeight="600" color="text.primary">
+          {comment.user.name}
         </Typography>
+      </Box>
 
-        {/* Avatar + Nombre en línea horizontal */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
-          <Avatar
-            src={comment.user.profilePic}
-            sx={{
-              width: 30,
-              height: 30,
-              bgcolor: "primary.light",
-              fontSize: "1.1rem",
-              fontWeight: "bold",
-            }}
-          >
-            {comment.user.name}
-          </Avatar>
-
-          <Typography variant="subtitle2" fontWeight="600" color="text.primary">
-            {comment.user.name}
-          </Typography>
-        </Box>
-
-        {/* Comentario abajo */}
-        <Typography variant="body1" color="text.primary" sx={{ lineHeight: 1.5, fontSize: "0.95rem" }}>
-          {comment.comment}
-        </Typography>
-      </Paper>
+      {/* Comentario abajo */}
+      <Typography variant="body1" color="text.primary" sx={{ lineHeight: 1.5, fontSize: "0.95rem" }}>
+        {comment.comment}
+      </Typography>
+    </Paper>
   )
 }
 
@@ -157,7 +157,9 @@ export default function TabComments({ initiative }: { initiative: Initiative }) 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const isFetchingRef = useRef(false)
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useComments(initiative.id.toString())
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useComments(
+    initiative.id.toString(),
+  )
 
   const createCommentMutation = useCreateComment()
 
@@ -228,7 +230,12 @@ export default function TabComments({ initiative }: { initiative: Initiative }) 
         initiativeId: initiative.id.toString(),
       })
 
-      console.log('response new comment', response)
+      engagementEvents.commentSubmitted({
+        initiativeId: initiative.id.toString(),
+        title: initiative.title,
+      })
+
+      console.log("response new comment", response)
 
       // Eliminar el delay del fade in para que aparezca inmediatamente
       setNewComment("")
@@ -267,135 +274,134 @@ export default function TabComments({ initiative }: { initiative: Initiative }) 
 
   return (
     <Container className="flex flex-col gap-4 p-0">
-          <Box>
-            <Typography className="font-semibold text-2xl text-[#304578]">
-              Comentarios
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              // mb: 4,
-              // maxWidth: {
-              //   xs: "100%",
-              //   // md: "75%",
-              // },
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-              <Typography variant="body1" fontWeight="500" sx={{ flex: 1 }}>
-                Escribe un comentario
-              </Typography>
-              {newComment.trim() && (
-                  <IconButton
-                    size="small"
-                    onClick={handleClearComment}
-                    sx={{
-                      width: 28,
-                      height: 28,
-                      bgcolor: "action.hover",
-                      "&:hover": {
-                        bgcolor: "action.selected",
-                      },
-                    }}
-                  >
-                    <Close fontSize="small" />
-                  </IconButton>
-              )}
-            </Box>
+      <Box>
+        <Typography className="font-semibold text-2xl text-[#304578]">Comentarios</Typography>
+      </Box>
+      <Box
+        sx={
+          {
+            // mb: 4,
+            // maxWidth: {
+            //   xs: "100%",
+            //   // md: "75%",
+            // },
+          }
+        }
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+          <Typography variant="body1" fontWeight="500" sx={{ flex: 1 }}>
+            Escribe un comentario
+          </Typography>
+          {newComment.trim() && (
+            <IconButton
+              size="small"
+              onClick={handleClearComment}
+              sx={{
+                width: 28,
+                height: 28,
+                bgcolor: "action.hover",
+                "&:hover": {
+                  bgcolor: "action.selected",
+                },
+              }}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          )}
+        </Box>
 
-              <TextField
-                fullWidth
-                multiline
-                maxRows={2}
-                placeholder="Comparte tu opinión..."
-                variant="standard"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                disabled={isPublishing}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault()
-                    handleSubmitComment()
-                  }
-                }}
-                sx={{
-                  mb: 2,
-                  "& .MuiInput-root": {
-                    fontSize: "1rem",
-                    "&:before": {
-                      borderBottomColor: "divider",
-                    },
-                    "&:hover:before": {
-                      borderBottomColor: "primary.main",
-                    },
-                    "&.Mui-focused:after": {
-                      borderBottomColor: "primary.main",
-                    },
-                  },
-                }}
-              />
-
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                variant="contained"
-                size="small"
-                startIcon={<Send />}
-                onClick={handleSubmitComment}
-                disabled={!newComment.trim() || isPublishing}
-                sx={{
-                  borderRadius: 2,
-                  px: 2,
-                  py: 1,
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  opacity: !newComment.trim() ? 0.6 : 1,
-                  transition: "all 0.3s ease",
-                  color: "white !important",
-                  "&:disabled": {
-                    backgroundColor: "action.disabled",
-                  },
-                }}
-              >
-                {isPublishing ? "Comentando..." : "Comentar"}
-              </Button>
-            </Box>
-          </Box>
-
-        {/* Comments List */}
-        <Box
+        <TextField
+          fullWidth
+          multiline
+          maxRows={2}
+          placeholder="Comparte tu opinión..."
+          variant="standard"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          disabled={isPublishing}
+          onKeyPress={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault()
+              handleSubmitComment()
+            }
+          }}
           sx={{
-            "&::-webkit-scrollbar": {
-              width: "6px",
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "transparent",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "divider",
-              borderRadius: "3px",
-              "&:hover": {
-                backgroundColor: "text.secondary",
+            mb: 2,
+            "& .MuiInput-root": {
+              fontSize: "1rem",
+              "&:before": {
+                borderBottomColor: "divider",
+              },
+              "&:hover:before": {
+                borderBottomColor: "primary.main",
+              },
+              "&.Mui-focused:after": {
+                borderBottomColor: "primary.main",
               },
             },
           }}
-          ref={scrollContainerRef}
-        >
-              {isLoading ? (
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: "50vh",
-                    width: "100%",
-                  }}
-                >
-                  <LoadingScreen noFixed />
-                </Box>
-               ) : allComments.length === 0 ? (
+        />
 
-                  <Box sx={{ textAlign: "center" }} className="flex flex-col items-center">
-                    {/* <ChatBubbleOutline sx={{ fontSize: 64, color: "primary.main", mb: 2 }} />
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={<Send />}
+            onClick={handleSubmitComment}
+            disabled={!newComment.trim() || isPublishing}
+            sx={{
+              borderRadius: 2,
+              px: 2,
+              py: 1,
+              textTransform: "none",
+              fontWeight: "bold",
+              opacity: !newComment.trim() ? 0.6 : 1,
+              transition: "all 0.3s ease",
+              color: "white !important",
+              "&:disabled": {
+                backgroundColor: "action.disabled",
+              },
+            }}
+          >
+            {isPublishing ? "Comentando..." : "Comentar"}
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Comments List */}
+      <Box
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "divider",
+            borderRadius: "3px",
+            "&:hover": {
+              backgroundColor: "text.secondary",
+            },
+          },
+        }}
+        ref={scrollContainerRef}
+      >
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "50vh",
+              width: "100%",
+            }}
+          >
+            <LoadingScreen noFixed />
+          </Box>
+        ) : allComments.length === 0 ? (
+          <Box sx={{ textAlign: "center" }} className="flex flex-col items-center">
+            {/* <ChatBubbleOutline sx={{ fontSize: 64, color: "primary.main", mb: 2 }} />
                     <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                       No hay comentarios aún
                     </Typography>
@@ -403,37 +409,37 @@ export default function TabComments({ initiative }: { initiative: Initiative }) 
                       ¡Sé el primero en comentar en esta iniciativa!
                     </Typography> */}
 
-                    <Card className="flex flex-col items-center rounded-2xl max-w-xs p-10 gap-4 bg-linear-to-t from-[#DEE8FF] to-[#FFFFFF]">
-                      <Box component="img" src={commentsImg}></Box>
-                      <Typography className="text-(--color-primary) font-medium text-sm">Inicia la Conversación</Typography>
-                      <Typography className="text-xs text-[#304578] text-center">
-                        Tu perspectiva puede ser la pieza que faltaba. ¡Sé el primero en comentar!
-                      </Typography>
-                    </Card>
-                  </Box>
-               ) : (
-                  <>
-                    {allComments.map((comment, index) => (
-                      <CommentItem
-                        key={comment.id}
-                        comment={comment}
-                        index={index}
-                        // currentUser={userFromApi || undefined}
-                      />
-                    ))}
+            <Card className="flex flex-col items-center rounded-2xl max-w-xs p-10 gap-4 bg-linear-to-t from-[#DEE8FF] to-[#FFFFFF]">
+              <Box component="img" src={commentsImg}></Box>
+              <Typography className="text-(--color-primary) font-medium text-sm">Inicia la Conversación</Typography>
+              <Typography className="text-xs text-[#304578] text-center">
+                Tu perspectiva puede ser la pieza que faltaba. ¡Sé el primero en comentar!
+              </Typography>
+            </Card>
+          </Box>
+        ) : (
+          <>
+            {allComments.map((comment, index) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                index={index}
+                // currentUser={userFromApi || undefined}
+              />
+            ))}
 
-                    {/* /* Espacio fijo para el loader del scroll infinito - solo si hay más páginas */}
-                    {hasNextPage && (
-                      <Box ref={loadMoreRef} sx={{ minHeight: 100 }}>
-                        {isFetchingNextPage && <InfiniteLoader />}
-                      </Box>
-                    )}
+            {/* /* Espacio fijo para el loader del scroll infinito - solo si hay más páginas */}
+            {hasNextPage && (
+              <Box ref={loadMoreRef} sx={{ minHeight: 100 }}>
+                {isFetchingNextPage && <InfiniteLoader />}
+              </Box>
+            )}
 
-                    {/* Espacio adicional al final para mejor UX */}
-                    <Box sx={{ height: 40 }} />
-                  </>
-                )}
-        </Box>
+            {/* Espacio adicional al final para mejor UX */}
+            <Box sx={{ height: 40 }} />
+          </>
+        )}
+      </Box>
     </Container>
   )
 }

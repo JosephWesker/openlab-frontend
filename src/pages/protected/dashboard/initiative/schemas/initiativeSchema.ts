@@ -16,6 +16,7 @@ const collaborator = z.object({
 })
 
 const need = z.object({
+  id: z.number(),
   role: z.string(), // ToDo: add role type instead string
   gSkills: z.string(),
   hardSkills: z.array(z.string())
@@ -170,9 +171,9 @@ export const userResponseDTO = z.object({
   user: z.object({
     id: z.number(),
     name: z.string(),
-    email: z.string(),
+    // email: z.string(),
     profilePic: z.string(),
-    wallet: z.string(),
+    // wallet: z.string(),
     github: z.string(),
     linkd: z.string(),
     discord: z.string(),

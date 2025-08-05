@@ -68,18 +68,19 @@ export const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: customColors.primary.main,
-      light: themeJson.schemes.light.primaryContainer,
-      dark: themeJson.schemes.light.onPrimary,
+      // main: customColors.primary.main,
+      main: themeJson.coreColors.primary,
+      light: themeJson.schemes.light.primary,
+      dark: themeJson.schemes.dark.primary,
       contrastText: "#FFFFFF",
     },
     secondary: {
-      // main: themeJson.coreColors.secondary,
-      // light: themeJson.schemes.light.secondaryContainer,
-      // dark: themeJson.schemes.light.onSecondary,
-      main: customColors.secondary.main,
-      light: customColors.secondary.light,
-      dark: customColors.secondary.dark,
+      main: themeJson.coreColors.secondary,
+      light: themeJson.schemes.light.secondary,
+      dark: themeJson.schemes.dark.secondary,
+      // main: customColors.secondary.main,
+      // light: customColors.secondary.light,
+      // dark: customColors.secondary.dark,
       contrastText: "#FFFFFF",
     },
     secondaryLight: {
