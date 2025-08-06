@@ -64,6 +64,7 @@ export const SNACKBAR_MESSAGE = {
 export const API_PATH = {
   USER: "/users",
   USERS: "/users",
+  USER_PROFILE: "/users/perfil",
   USER_SKILL: "/users/skill",
   USER_NOTIFICATION: "/users/notifications",
   SKILLS_GENERAL: "/users/skill/GENERAL",

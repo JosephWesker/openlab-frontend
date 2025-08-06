@@ -88,7 +88,7 @@ export default function PageInitiative() {
 
   return (
     <Box className="flex h-full justify-center">
-      <Box className="flex flex-col flex-1 p-4 max-w-7xl">
+      <Box className="flex flex-col flex-1 max-w-7xl">
         <Box className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_22rem] gap-4">
           <Box component="main" className="space-y-4">
             <Box className="flex justify-between">

@@ -37,7 +37,7 @@ export default function InvestApplyModal({ initiativeId }: { initiativeId: numbe
     <>
       <Button
         onClick={handleOpen}
-        className="flex m-auto mt-2 font-normal text-xs"
+        className="flex m-auto font-normal text-xs"
         variant="contained"
       >
         Invertir en la iniciativa

@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField"
 import { useInitiativeApi } from "../../../stores/initiativeStore"
 import { useSnackbar } from "@/context/SnackbarContext"
 import { useIsUserCofounder } from "../hooks/useIsUserCofounder"
-import { UserResponseDTO, type Initiative, type InitiativeFull } from "../../../schemas/initiativeSchema"
+import { type Announcement, type InitiativeFull } from "../../../schemas/initiativeSchema"
 import { useAuthContext } from "@/hooks/useAuthContext"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
@@ -38,15 +38,18 @@ import FormHelperText from "@mui/material/FormHelperText"
 import { useGitHubValidation } from "../hooks/useGitHubValidation"
 // import { ButtonBase } from "@mui/material"
 import { engagementEvents } from "@/lib/clarityEvents"
+import Card from "@mui/material/Card"
+import CardContent from "@mui/material/CardContent"
+import { UserProfileResponseDTO } from "../../../schemas/userProfileSchema"
 
 export default function CoFoundingApplyModal({
   initiativeFull,
-  announcementId,
+  announcement,
   onCollaborationChange,
   onCofoundingChange,
 }: {
   initiativeFull: InitiativeFull
-  announcementId: number
+  announcement: Announcement
   onCollaborationChange: (status: boolean) => void
   onCofoundingChange: (status: boolean) => void
 }) {
@@ -79,7 +82,7 @@ export default function CoFoundingApplyModal({
     if (initiativeFull.coFounderAnnouncementId !== null) {
       showSnackbar({
         title: "Aplicación realizada",
-        message: "Ya has aplicado como cofundador en esta postulación",
+        message: "Ya has aplicado como cofundador",
         severity: "error",
       })
       return
@@ -90,7 +93,7 @@ export default function CoFoundingApplyModal({
 
     if (
       (userFromApi?.social.github && userFromApi?.social.github !== "") ||
-      (user?.user.github && user?.user.github !== "") ||
+      (userProfile?.github && userProfile.github !== "") ||
       userAddedGitHub !== ""
     ) {
       setActiveTab(1)
@@ -137,21 +140,68 @@ export default function CoFoundingApplyModal({
     }
   }
 
-  const [isGettingUser, setGettingUser] = useState(false)
-  const [user, setUser] = useState<UserResponseDTO>()
-  const { getUser, updateUser } = useInitiativeApi()
-  useEffect(() => {
-    const getUserData = async () => {
-      if (isGettingUser) return
-      if (!userId) return
+  // const [isGettingUser, setGettingUser] = useState(false)
+  // const [user, setUser] = useState<UserResponseDTO>()
+  // const { getUser, updateUser } = useInitiativeApi()
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     if (isGettingUser) return
+  //     if (!userId) return
 
-      setGettingUser(true)
+  //     setGettingUser(true)
+
+  //     try {
+  //       const userResponse = await getUser(userId)
+  //       console.log(userResponse)
+
+  //       const parsed = UserResponseDTO.safeParse(userResponse)
+  //       console.log(parsed)
+
+  //       if (!parsed.success) {
+  //         showSnackbar({
+  //           title: "Servicio no disponible",
+  //           message: "Servicio no disponible",
+  //           severity: "error",
+  //         })
+  //         // console.error("parse failed:", parsed.error.format())
+  //         console.error("issues detail:", parsed.error.issues)
+  //         throw new Error("Ocurrió un error inesperado al cargar el usuario.")
+  //       }
+  //       console.log("initiative", parsed.data)
+  //       setUser(parsed.data)
+  //     } catch (err) {
+  //       if (err instanceof Error) {
+  //         console.log("err.message", err.message)
+  //         showSnackbar({
+  //           title: "Ups, algo salio mal",
+  //           message: "Ups, algo salio mal",
+  //           severity: "error",
+  //         })
+  //       }
+  //     } finally {
+  //       setGettingUser(false)
+  //     }
+  //   }
+
+  //   getUserData()
+  // }, [])
+
+  // Get current profile user to get active vote and GitHub
+  // ToDo: this auto request must not be on clicking open modal to prevent multi requests?
+  const [isGettingUserProfile, setGettingUserProfile] = useState(false)
+  const [userProfile, setUserProfile] = useState<UserProfileResponseDTO>()
+  const { updateUser, getUserProfile } = useInitiativeApi()
+  useEffect(() => {
+    const getUserProfileData = async () => {
+      if (isGettingUserProfile) return
+
+      setGettingUserProfile(true)
 
       try {
-        const userResponse = await getUser(userId)
-        console.log(userResponse)
+        const userProfileResponse = await getUserProfile()
+        console.log(userProfileResponse)
 
-        const parsed = UserResponseDTO.safeParse(userResponse)
+        const parsed = UserProfileResponseDTO.safeParse(userProfileResponse)
         console.log(parsed)
 
         if (!parsed.success) {
@@ -162,10 +212,10 @@ export default function CoFoundingApplyModal({
           })
           // console.error("parse failed:", parsed.error.format())
           console.error("issues detail:", parsed.error.issues)
-          throw new Error("Ocurrió un error inesperado al cargar el usuario.")
+          throw new Error("Ocurrió un error inesperado al conseguir datos del usuario.")
         }
         console.log("initiative", parsed.data)
-        setUser(parsed.data)
+        setUserProfile(parsed.data)
       } catch (err) {
         if (err instanceof Error) {
           console.log("err.message", err.message)
@@ -176,11 +226,11 @@ export default function CoFoundingApplyModal({
           })
         }
       } finally {
-        setGettingUser(false)
+        setGettingUserProfile(false)
       }
     }
 
-    getUserData()
+    getUserProfileData()
   }, [])
 
   // Add GitHub requests
@@ -203,43 +253,43 @@ export default function CoFoundingApplyModal({
     setIsAddingGitHub(true)
 
     try {
-      const userResponse = await getUser(userFromApi.id)
-      console.log(userResponse)
+      const userProfileResponse = await getUserProfile()
+      console.log(userProfileResponse)
 
-      const parsedGetUser = UserResponseDTO.safeParse(userResponse)
-      console.log("parsedGetUser", parsedGetUser)
+      const parsedGetUserProfile = UserProfileResponseDTO.safeParse(userProfileResponse)
+      console.log("parsedGetUser", parsedGetUserProfile)
 
-      if (!parsedGetUser.success) {
+      if (!parsedGetUserProfile.success) {
         showSnackbar({
           title: "Servicio no disponible",
           message: "Servicio no disponible",
           severity: "error",
         })
         // console.error("parse failed:", parsed.error.format())
-        console.error("issues detail:", parsedGetUser.error.issues)
+        console.error("issues detail:", parsedGetUserProfile.error.issues)
         throw new Error("Ocurrió un error inesperado al cargar el usuario.")
       }
       // console.log("initiative", parsed.data)
       // setUser(parsed.data)
 
-      if (parsedGetUser.data.user.github && parsedGetUser.data.user.github !== "") {
-        setUser(parsedGetUser.data)
+      if (parsedGetUserProfile.data.github && parsedGetUserProfile.data.github !== "") {
+        setUserProfile(parsedGetUserProfile.data)
       } else {
         const responseUpdateUser = await updateUser({
-          id: parsedGetUser.data.user.id,
-          name: parsedGetUser.data.user.name,
+          id: parsedGetUserProfile.data.id,
+          name: parsedGetUserProfile.data.name,
           email: userFromApi.email,
-          profilePic: parsedGetUser.data.user.profilePic,
+          profilePic: parsedGetUserProfile.data.profilePic,
           wallet: userFromApi.wallet,
           github: gitHubUrl,
-          linkd: parsedGetUser.data.user.linkd,
-          discord: parsedGetUser.data.user.discord,
-          facebook: parsedGetUser.data.user.facebook,
-          twitter: parsedGetUser.data.user.twitter,
-          instagram: parsedGetUser.data.user.instagram,
-          other: parsedGetUser.data.user.other,
-          skills: parsedGetUser.data.user.skills,
-          description: parsedGetUser.data.user.description,
+          linkd: parsedGetUserProfile.data.linkd,
+          discord: parsedGetUserProfile.data.discord,
+          facebook: parsedGetUserProfile.data.facebook,
+          twitter: parsedGetUserProfile.data.twitter,
+          instagram: parsedGetUserProfile.data.instagram,
+          other: parsedGetUserProfile.data.other,
+          skills: parsedGetUserProfile.data.skills.map((skill) => skill.name),
+          description: parsedGetUserProfile.data.description,
         })
 
         const parsedUpdatedUser = UpdateUserResponseDTO.safeParse(responseUpdateUser)
@@ -290,26 +340,37 @@ export default function CoFoundingApplyModal({
     if (isAplying) return
     if (!userFromApi) return
 
+    if (!userSkillsGeneral || userSkillsGeneral.length === 0) {
+      showSnackbar({
+        title: "Es necesario tener habilidades generales",
+        message: "Para postularte necesitas tener habilidades generales",
+        severity: "error",
+      })
+      return
+    }
+
     // Get the user again and validate if it has GitHub
+    setIsAplying(true)
+
     try {
-      const userResponse = await getUser(userFromApi.id)
-      console.log(userResponse)
+      const userProfileResponse = await getUserProfile()
+      console.log(userProfileResponse)
 
-      const parsedGetUser = UserResponseDTO.safeParse(userResponse)
-      console.log("parsedGetUser", parsedGetUser)
+      const parsedGetUserProfile = UserProfileResponseDTO.safeParse(userProfileResponse)
+      console.log("parsedGetUserProfile", parsedGetUserProfile)
 
-      if (!parsedGetUser.success) {
+      if (!parsedGetUserProfile.success) {
         showSnackbar({
           title: "Servicio no disponible",
           message: "Servicio no disponible",
           severity: "error",
         })
         // console.error("parse failed:", parsed.error.format())
-        console.error("issues detail:", parsedGetUser.error.issues)
+        console.error("issues detail:", parsedGetUserProfile.error.issues)
         throw new Error("Ocurrió un error inesperado al cargar el usuario.")
       }
 
-      if (parsedGetUser.data.user.github && parsedGetUser.data.user.github !== "") {
+      if (parsedGetUserProfile.data.github && parsedGetUserProfile.data.github !== "") {
         // if (
         //   userFromApi?.social.github &&
         //   userFromApi?.social.github === "" &&
@@ -338,7 +399,7 @@ export default function CoFoundingApplyModal({
 
         try {
           const response = await initiativeApplyCofounding(
-            announcementId,
+            announcement.id,
             description,
             userSkillsGeneral[0],
             userSkillsTechnical,
@@ -353,9 +414,9 @@ export default function CoFoundingApplyModal({
             throw new Error("Ocurrió un error inesperado al aplicar, intenta de nuevo más tarde.")
           }
 
-          onCofoundingChange(true)
-          setLastTab(0)
-          setActiveTab(1)
+          onCofoundingChange(true) // ToDo: check initiative is updating in order to block the modal to prevent to apply again
+          setLastTab(1)
+          setActiveTab(2)
 
           engagementEvents.postulationSubmitted({
             initiativeId: initiativeFull.initiative.id.toString(),
@@ -431,12 +492,12 @@ export default function CoFoundingApplyModal({
                 }}
               />
             )}
-            {activeTab === 1 && user && (
+            {activeTab === 1 && userProfile && (
               <StepIntro
-                initiative={initiativeFull.initiative}
-                announcementId={announcementId}
+                // initiative={initiativeFull.initiative}
+                announcement={announcement}
                 description={description}
-                user={user}
+                userProfile={userProfile}
                 userFromApi={userFromApi}
                 isCofounder={isCofounder}
                 isApplicant={isApplicant}
@@ -460,10 +521,10 @@ export default function CoFoundingApplyModal({
 }
 
 function StepIntro({
-  initiative,
-  announcementId,
+  // initiative,
+  announcement,
   description,
-  user,
+  userProfile,
   userFromApi,
   isAplying,
   isCofounder,
@@ -474,10 +535,10 @@ function StepIntro({
   onClose,
   onApply,
 }: {
-  initiative: Initiative
-  announcementId: number
+  // initiative: Initiative
+  announcement: Announcement
   description: string
-  user: UserResponseDTO
+  userProfile: UserProfileResponseDTO
   userFromApi: UserEntity | null
   isAplying: boolean
   isCofounder: boolean
@@ -499,63 +560,115 @@ function StepIntro({
         </Typography>
       </DialogTitle>
 
-      <DialogContent dividers={true} className="flex gap-0 p-6  w-full max-h-[64vh]">
+      <DialogContent dividers={true} className="flex gap-6 p-6 items-center w-full max-h-[64vh]">
         <Box>
-          {initiative.needs.map((need, index: number) => (
-            <Box key={index}>
-              {/* <span>need id {need.id}<br/></span>
-              <span>announcementId {announcementId}</span> */}
-              {need.id === announcementId && ""}
-            </Box>
-          ))}
+          {/* {initiative.announcements.map((need, index: number) => ( */}
+          {/* <Box key={index}> */}
+          <Card elevation={2} className="w-[16rem]">
+            <CardContent sx={{ p: 2.5, textAlign: "center" }}>
+              <Avatar
+                src={""}
+                sx={{
+                  width: 70,
+                  height: 70,
+                  mx: "auto",
+                  mb: 1.5,
+                  border: "3px solid",
+                  borderColor: "primary.main",
+                }}
+              />
+
+              <Typography variant="h6" fontWeight="bold" sx={{ mb: 1.5 }}>
+                Perfil buscado
+              </Typography>
+
+              <Box sx={{ mb: 1.5 }}>
+                <Typography variant="subtitle2" fontWeight="600" sx={{ mb: 1 }}>
+                  Habilidad General:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, justifyContent: "center" }}>
+                  <Chip
+                    // key={profile.generalSkills[0]}
+                    label={announcement.gSkill}
+                    size="small"
+                    color="primary"
+                    sx={{ fontSize: "0.7rem" }}
+                  />
+                </Box>
+              </Box>
+
+              <Box sx={{ mb: 1.5 }}>
+                <Typography variant="subtitle2" fontWeight="600" sx={{ mb: 1 }}>
+                  Habilidades Técnicas:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, justifyContent: "center" }}>
+                  {announcement.hardSkills.slice(0, 3).map((skill) => (
+                    <Chip key={skill} label={skill} size="small" color="secondary" sx={{ fontSize: "0.7rem" }} />
+                  ))}
+                  {announcement.hardSkills.length > 3 && (
+                    <Chip
+                      label={`+${announcement.hardSkills.length - 3}`}
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
+                      sx={{ fontSize: "0.7rem" }}
+                    />
+                  )}
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+          {/* </Box>
+            {need.id === announcementId && need.id} */}
+          {/* ))} */}
         </Box>
         <Box className="flex flex-col w-full items-center gap-2">
-          <Avatar className="w-20 h-20" alt="Travis Howard" src={user.user.profilePic} />
-          <Typography className="flex font-semibold text-xl justify-center">{user.user.name}</Typography>
+          <Avatar className="w-20 h-20" alt="" src={userProfile.profilePic ? userProfile.profilePic : ""} />
+          <Typography className="flex font-semibold text-xl justify-center">{userProfile.name}</Typography>
           <Typography className="flex justify-center text-center">{userFromApi?.email}</Typography>
           <Box>
-            {user.user.discord && (
-              <ButtonBase href={user.user.discord} target="_blank">
+            {userProfile.discord && (
+              <ButtonBase href={userProfile.discord} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoDiscordImg}></Box>
               </ButtonBase>
             )}
-            {user.user.github && (
-              <ButtonBase href={user.user.github} target="_blank">
+            {userProfile.github && (
+              <ButtonBase href={userProfile.github} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoGithubImg}></Box>
               </ButtonBase>
             )}
-            {user.user.linkd && (
-              <ButtonBase href={user.user.linkd} target="_blank">
+            {userProfile.linkd && (
+              <ButtonBase href={userProfile.linkd} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoLinkedinImg}></Box>
               </ButtonBase>
             )}
-            {user.user.instagram && (
-              <ButtonBase href={user.user.instagram} target="_blank">
+            {userProfile.instagram && (
+              <ButtonBase href={userProfile.instagram} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoInstagramImg}></Box>
               </ButtonBase>
             )}
-            {user.user.facebook && (
-              <ButtonBase href={user.user.facebook} target="_blank">
+            {userProfile.facebook && (
+              <ButtonBase href={userProfile.facebook} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoFacebookImg}></Box>
               </ButtonBase>
             )}
-            {user.user.twitter && (
-              <ButtonBase href={user.user.twitter} target="_blank">
+            {userProfile.twitter && (
+              <ButtonBase href={userProfile.twitter} target="_blank">
                 <Box component="img" className="w-6 h-6 bg-white p-1" src={logoXImg}></Box>
               </ButtonBase>
             )}
-            {user.user.other && (
-              <ButtonBase href={user.user.other} target="_blank">
+            {userProfile.other && (
+              <ButtonBase href={userProfile.other} target="_blank">
                 <LinkIcon></LinkIcon>
               </ButtonBase>
             )}
           </Box>
-          {!user.user.description ? (
+          {!userProfile.description ? (
             <Typography className="flex justify-center text-center italic text-gray-500">
               ¡Aún no tienes una descripción de tu perfil!
             </Typography>
           ) : (
-            <Typography className="flex justify-center text-center">{user.user.description}</Typography>
+            <Typography className="flex justify-center text-center">{userProfile.description}</Typography>
           )}
 
           <Typography className="font-normal text-md">Habilidades generales:</Typography>
@@ -626,7 +739,7 @@ function StepIntro({
               ? "Ya eres Cofundador"
               : isApplicant
                 ? "Solicitud en revisión"
-                : "Postularme a cofundador"}
+                : "Postularme como cofundador"}
           {isAplying || (isAplying && <CircularProgress size={16} color="inherit" />)}
         </Button>
       </DialogActions>
@@ -701,7 +814,7 @@ function StepConfirmation({ onClose }: { onClose: () => void }) {
       <Box>
         <div className="flex flex-col items-center justify-center gap-4 p-4">
           {/* <div className="flex flex-col items-center justify-center gap-4 p-4"> */}
-          <Lottie loop play animationData={arrowAnimation} style={{ width: "50%", height: "50%" }} />
+          <Lottie play animationData={arrowAnimation} style={{ width: "50%", height: "50%" }} />
           <Typography variant="h6" className="text-center font-semibold">
             ¡Tu postulación ha sido enviada!
           </Typography>

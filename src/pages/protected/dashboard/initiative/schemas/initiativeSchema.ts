@@ -170,17 +170,17 @@ export const voteResponseDTO = z.array( // ToDo: unnecesary array
 export const userResponseDTO = z.object({
   user: z.object({
     id: z.number(),
-    name: z.string(),
+    name: z.string().nullable(),
     // email: z.string(),
-    profilePic: z.string(),
+    profilePic: z.string().nullable(),
     // wallet: z.string(),
     github: z.string(),
-    linkd: z.string(),
+    linkd: z.string().nullable(),
     discord: z.string(),
     facebook: z.string(),
-    twitter: z.string(),
+    twitter: z.string().nullable(),
     instagram: z.string(),
-    other: z.string(),
+    other: z.string().nullable(),
     skills: z.array(z.string()),
     description: z.string()
   }),

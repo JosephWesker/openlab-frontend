@@ -200,7 +200,7 @@ export default function Sidebar({ initiativeFull }: { initiativeFull: Initiative
               )}
               <CofoundingApplyModal
                 initiativeFull={initiativeFull}
-                announcementId={announcement.id}
+                announcement={announcement}
                 onCollaborationChange={(status) => {
                   setCollaborationStatus(status)
                 }}
@@ -237,7 +237,7 @@ export default function Sidebar({ initiativeFull }: { initiativeFull: Initiative
               ))}
             </>
           ) : (
-            <CardContent className="flex flex-col items-center p-4 gap-4">
+            <CardContent className="flex flex-col items-center p-0 gap-4">
               <Card className="flex flex-col items-center rounded-xl p-10 gap-4 bg-linear-to-t from-[#DEE8FF] to-[#FFFFFF]">
                 <Box component="img" src={collaboratorsImg}></Box>
                 <Typography className="text-(--color-primary) font-medium text-sm">Reuniendo al Equipo</Typography>
@@ -258,7 +258,7 @@ export default function Sidebar({ initiativeFull }: { initiativeFull: Initiative
       </Card>
 
       <Card className="rounded-xl bg-[#FAF8FF]">
-        <CardContent className="p-4">
+        <CardContent className="flex flex-col p-4 gap-4">
           <Box className="font-normal text-center text-[#3D7BFF] flex justify-center gap-2">
             Inversionistas
             <WalletRoundedIcon className="text-(--color-primary)" />
@@ -276,7 +276,7 @@ export default function Sidebar({ initiativeFull }: { initiativeFull: Initiative
               ))}
             </>
           ) : (
-            <CardContent className="flex flex-col items-center p-4 gap-4">
+            <CardContent className="flex flex-col items-center p-0 gap-4">
               <Card className="flex flex-col items-center rounded-xl p-10 gap-4 bg-linear-to-t from-[#DEE8FF] to-[#FFFFFF]">
                 <Box component="img" src={investorsImg}></Box>
                 <Typography className="text-(--color-primary) font-medium text-sm">Buscando Catalizadores</Typography>

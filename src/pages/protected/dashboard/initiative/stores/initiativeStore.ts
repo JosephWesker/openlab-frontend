@@ -10,6 +10,7 @@ import type {
   VoteResponseDTO,
 } from "../schemas/initiativeSchema"
 import type { UpdateUserRequestDTO, UpdateUserResponseDTO } from "../schemas/userSchema"
+import type { UserProfileResponseDTO } from "../schemas/userProfileSchema"
 
 export function useInitiativeApi() {
   const apiClient = useApiClient()
@@ -36,6 +37,12 @@ export function useInitiativeApi() {
     })
   }
 
+  async function getUserProfile(): Promise<UserProfileResponseDTO> {
+    return await apiClient<UserProfileResponseDTO>(`${API_PATH.USER_PROFILE}`, {
+      method: "GET",
+    })
+  }
+
   async function getUser(id: number): Promise<UserResponseDTO> {
     return await apiClient<UserResponseDTO>(`${API_PATH.USER}/${id}`, {
       method: "GET",
@@ -46,7 +53,6 @@ export function useInitiativeApi() {
   async function updateUser(user: UpdateUserRequestDTO): Promise<UpdateUserResponseDTO> {
     return await apiClient<UpdateUserResponseDTO>(`${API_PATH.USER}`, {
       method: "PUT",
-      // queryParams: { id: String(id) }
       body: JSON.stringify(user),
     })
   }
@@ -95,5 +101,6 @@ export function useInitiativeApi() {
     getInitiativeByTitle,
     getInitiativeApplications,
     updateUser,
+    getUserProfile
   }
 }

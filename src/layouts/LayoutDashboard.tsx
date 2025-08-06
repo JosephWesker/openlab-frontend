@@ -35,9 +35,9 @@ const LayoutDashboard = () => {
             ml: { xs: 0, md: 1 },
             p: {
               xs: 2,
-              md: 3,
+              md: 2,
             },
-            overflowY: "scroll",
+            overflowY: "unset", // warning: setting to scroll will affect the padding
             borderRadius: "32px",
             backgroundColor: "white",
             flex: 1,

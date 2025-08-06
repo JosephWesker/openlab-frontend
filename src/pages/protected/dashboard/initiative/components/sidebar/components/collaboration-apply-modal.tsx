@@ -37,6 +37,7 @@ import { useGitHubValidation } from "../hooks/useGitHubValidation"
 import TextField from "@mui/material/TextField"
 import FormHelperText from "@mui/material/FormHelperText"
 import { engagementEvents } from "@/lib/clarityEvents"
+import { InitiativeState } from "@/interfaces/general-enum"
 
 export default function CollaborationApplyModal({
   initiative,
@@ -79,7 +80,7 @@ export default function CollaborationApplyModal({
       case 1:
         return isMobile ? "95vw" : "32rem"
       case 2:
-        return isMobile ? "95vw" : "36rem"
+        return isMobile ? "95vw" : "40rem"
       case 3:
         return isMobile ? "95vw" : "30rem"
       case 4:
@@ -204,10 +205,12 @@ export default function CollaborationApplyModal({
     }
 
     if (
-      (userFromApi?.social.github && userFromApi?.social.github === "") ||
-      (user?.user.github && user?.user.github === "") ||
+      (userFromApi?.social.github && userFromApi?.social.github === "") &&
+      (user?.user.github && user?.user.github === "") &&
       userAddedGitHub === ""
-      // !userGitHub
+      // (userFromApi?.social.github && userFromApi?.social.github !== "") ||
+      // (user?.user.github && user?.user.github !== "") ||
+      // userAddedGitHub !== ""
     ) {
       setActiveTab(4)
       // showSnackbar({
@@ -264,7 +267,7 @@ export default function CollaborationApplyModal({
         onClick={() => {
           handleOpen()
         }}
-        className="flex m-auto mt-2 font-normal text-xs"
+        className="flex m-auto font-normal text-xs"
         variant="contained"
       >
         Participar
@@ -300,6 +303,7 @@ export default function CollaborationApplyModal({
             )}
             {activeTab === 1 && (
               <StepBenefits
+                initiative={initiative}
                 onNext={() => {
                   setLastTab(1)
                   setActiveTab(2)
@@ -329,7 +333,7 @@ export default function CollaborationApplyModal({
                 isAddingGitHub={isAddingGitHub}
                 onBack={() => {
                   setLastTab(4)
-                  setActiveTab(0)
+                  setActiveTab(2)
                 }}
                 onAddGitHub={(gitHubUrl: string) => {
                   // setActiveTab(3)
@@ -442,16 +446,24 @@ function StepIntro({
   )
 }
 
-function StepBenefits({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+function StepBenefits({
+  initiative,
+  onNext,
+  onBack,
+}: {
+  initiative: Initiative
+  onNext: () => void
+  onBack: () => void
+}) {
   return (
     <DialogContent className="flex flex-col items-center">
       <Box className="flex flex-col items-center gap-4">
         <Box component="img" src={benefitsImg}></Box>
-        <Typography className="text-(--color-primary) font-medium text-sm">
-          ¡Grandes Beneficios al Colaborar en "Plataforma de Gobernanza Web3"!
+        <Typography className="text-(--color-primary) font-medium text-md">
+          ¡Grandes Beneficios al Colaborar en <span className="font-semibold">{initiative.title}</span>!
         </Typography>
 
-        <Typography className="font-medium text-sm">
+        <Typography className="font-medium">
           Al unirte a una iniciativa en OpenLab, no solo contribuyes a proyectos innovadores, sino que también obtienes:
         </Typography>
 
@@ -503,11 +515,11 @@ function StepResponsibilities({
     <DialogContent className="flex flex-col items-center">
       <Box className="flex flex-col items-center gap-4">
         <Box component="img" src={collaboratorsImg}></Box>
-        <Typography className="text-(--color-primary) font-medium text-sm">
+        <Typography className="text-(--color-primary) font-medium text-md">
           Tus Responsabilidades como Colaborador
         </Typography>
 
-        <Typography className="font-medium text-sm">
+        <Typography className="font-medium">
           Para garantizar una colaboración exitosa y transparente, considera lo siguiente:
         </Typography>
 
@@ -626,10 +638,30 @@ function StepConfirmation({ initiative, onClose }: { initiative: Initiative; onC
       <Box>
         <div className="flex flex-col items-center justify-center gap-4 p-4">
           <Lottie loop play animationData={arrowAnimation} style={{ width: "50%", height: "50%" }} />
-          <Typography variant="h6" className="text-center font-semibold">
-            ¡Te has registrado con éxito para participar en la iniciativa!
-          </Typography>
-          <Typography className="text-center text-gray-500">Ahora eres colaborador de {initiative.title}</Typography>
+          {initiative.state === InitiativeState.APPROVED ? (
+            <Box className="flex flex-col gap-4">
+              <Typography variant="h6" className="text-center font-semibold">
+                ¡Te has registrado con éxito para participar en la iniciativa
+                <span className="text-(--color-primary) font-semibold"> {initiative.title}</span>!
+              </Typography>
+              <Typography className="text-center text-gray-500">
+                ¡Te damos la bienvenida al equipo! Ahora puedes acceder directamente a Dwork para ver las tareas y
+                empezar a contribuir.
+              </Typography>
+            </Box>
+          ) : (
+            <Box className="flex flex-col gap-4">
+              <Typography variant="h6" className="text-center font-semibold">
+                ¡Te has registrado con éxito para participar en la iniciativa
+                <span className="text-(--color-primary) font-semibold"> {initiative.title}</span>!
+              </Typography>
+              <Typography className="text-center text-gray-500">
+                ¡Gracias por tu interés! Te invitamos a mantenerte al tanto de las actualizaciones de la iniciativa. Así
+                cuando sea aprobada y activada, podrás acceder a sus herramientas de colaboración y empezar a
+                contribuir.
+              </Typography>
+            </Box>
+          )}
         </div>
       </Box>
       <DialogActions className="p-4 gap-4">
