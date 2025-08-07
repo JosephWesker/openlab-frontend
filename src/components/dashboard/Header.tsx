@@ -24,6 +24,7 @@ import { useEffect, useState } from "react"
 import { useSkillsStore } from "@/stores/skillsStore"
 import { useApi } from "@/hooks/useApi"
 import { HEADER_ACTIONS, BREADCRUMB_STRUCTURE } from "@/lib/constants"
+import slugify from "slugify"
 
 export const Header = () => {
   const theme = useTheme()
@@ -62,6 +63,25 @@ export const Header = () => {
   useEffect(() => {
     setSkills(fetchApi)
   }, [])
+
+  const createSlug = (title: string) => {
+    let processedTitle = title
+
+    // Detecta si está URL-encoded y decodifica
+    if (title.includes("%")) {
+      try {
+        processedTitle = decodeURIComponent(title)
+      } catch {
+        // Si falla la decodificación, usa el título original
+        processedTitle = title
+      }
+    }
+
+    return slugify(processedTitle, {
+      strict: true,
+      locale: "es",
+    })
+  }
 
   // Función para generar breadcrumbs basado en la ruta actual
   const getBreadcrumbs = () => {
@@ -271,7 +291,7 @@ export const Header = () => {
                     fontWeight: 500,
                   }}
                 >
-                  {crumb.label}
+                  {createSlug(crumb.label)}
                 </Typography>
               ) : (
                 <Typography

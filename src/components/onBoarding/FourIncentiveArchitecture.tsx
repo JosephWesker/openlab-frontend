@@ -2,6 +2,10 @@ import React, { useState } from "react"
 import { Box, Typography, Container, Card, CardContent } from "@mui/material"
 import { motion } from "framer-motion"
 import { theme } from "@/lib/theme"
+import collaboratorImage from "@/assets/images/onBoarding/collaborator.png"
+import investorImage from "@/assets/images/onBoarding/investor.png"
+import leaderImage from "@/assets/images/onBoarding/leader.png"
+
 interface Participant {
   id: string
   title: string
@@ -17,7 +21,7 @@ const participants: Participant[] = [
     subtitle: "(El Talento)",
     description:
       "Una vez activa, la iniciativa se integra con Dework. El líder descompone el trabajo en tareas y bounties. Al completar tareas, recibes pagos en tokens del proyecto. Tu trabajo se convierte en propiedad.",
-    image: "/src/assets/images/onBoarding/collaborator.png",
+    image: collaboratorImage,
   },
   {
     id: "investors",
@@ -25,7 +29,7 @@ const participants: Participant[] = [
     subtitle: "(El Capital)",
     description:
       "Puedes aportar capital directamente a la tesorería de la DAO pero esta no compra tokens, hasta que haya trabajo validado. A cambio, recibes una cantidad proporcional de tokens del proyecto, convirtiéndote en co-propietario.",
-    image: "/src/assets/images/onBoarding/investor.png",
+    image: investorImage,
   },
   {
     id: "founders",
@@ -33,7 +37,7 @@ const participants: Participant[] = [
     subtitle: "(La Visión)",
     description:
       "El líder y cofundadores no reciben pagos solo hasta que estos se generen de manera dinámica conforme se van generando de los colaboradores e inversionistas, para que siempre mantengan la proporción del 30% de la totalidad del proyecto, lo que asegura su compromiso a largo plazo con el proyecto.",
-    image: "/src/assets/images/onBoarding/leader.png",
+    image: leaderImage,
   },
 ]
 

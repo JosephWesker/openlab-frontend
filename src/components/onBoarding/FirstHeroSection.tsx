@@ -23,6 +23,7 @@ export const FirstHeroSection: React.FC<HeroSectionProps> = ({
       },
     },
   }
+
   const titleVariants = {
     hidden: { opacity: 0, y: -50, scale: 0.9 },
     visible: {

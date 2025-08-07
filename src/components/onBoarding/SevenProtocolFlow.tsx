@@ -352,11 +352,11 @@ export const SevenProtocolFlow: React.FC = () => {
   const showHint = true
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 mt-6 pt-8 px-4">
+    <div className="w-full min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-24 px-4">
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.h1 variants={titleVariants} className="text-4xl md:text-5xl font-bold text-blue-600 mb-4">
+          <motion.h1 variants={titleVariants} className="text-4xl md:text-5xl font-bold text-primary mb-4">
             Visualización del Protocolo Completo
           </motion.h1>
           <motion.p variants={titleVariants} className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
@@ -370,7 +370,8 @@ export const SevenProtocolFlow: React.FC = () => {
           ref={flowContainerRef}
           className="w-full border border-gray-200 rounded-lg shadow-lg bg-white relative"
           style={{
-            height: "100vh",
+            // height: "100vh",
+            height: "1700px",
             minHeight: 600,
           }}
         >
@@ -391,17 +392,18 @@ export const SevenProtocolFlow: React.FC = () => {
             fitViewOptions={{
               padding: 0.15,
               includeHiddenNodes: false,
-              minZoom: 0.25,
-              maxZoom: 1.2,
+              minZoom: 0.75,
+              maxZoom: 2,
             }}
-            minZoom={0.25}
-            maxZoom={1.2}
+            minZoom={0.75}
+            maxZoom={2}
             onInit={(reactFlowInstance) => {
               // Centramos en el nodo inicial después de cargar
               setTimeout(() => {
                 reactFlowInstance.fitView({
                   padding: 0.15,
                   duration: 800,
+                  minZoom: 0.75,
                 })
               }, 100)
             }}

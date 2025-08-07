@@ -29,7 +29,8 @@ const tokenDistribution: TokenDistribution[] = [
     id: "founders",
     label: "Líder y Equipo Fundador",
     value: 30,
-    color: "#3D7BFF",
+    // color: "#3D7BFF",
+    color: "#6e6e6e",
     icon: <LeaderIcon sx={{ fontSize: 40 }} />,
     emoji: "👨‍💼",
     description:

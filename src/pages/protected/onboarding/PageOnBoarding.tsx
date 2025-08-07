@@ -38,7 +38,10 @@ import { communityEvents } from "@/lib/clarityEvents"
 
 // Esquema de validación con Zod
 const userProfileSchema = z.object({
-  name: z.string().min(1, "El nombre es requerido").optional(),
+  name: z.string().min(1, "El nombre es requerido").refine(
+    (val) => !val || !val.includes("@"),
+    "El nombre no puede contener el símbolo @"
+  ).optional(),
   roles: z.array(z.string()).optional(),
   skillsGeneral: z.array(z.string()).optional(),
 })

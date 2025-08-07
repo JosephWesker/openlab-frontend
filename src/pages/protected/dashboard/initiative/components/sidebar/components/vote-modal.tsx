@@ -157,7 +157,7 @@ export default function VoteModal({ initiative }: { initiative: Initiative }) {
   // const favorPercent = totalVotes === 0 ? 0 : (votesInFavor / totalVotes) * 100
   const acceptance = totalVotes === 0 ? 0 : (votesInFavor / totalVotes) * 100
 
-  const totalVotesForAprove = 3
+  const totalVotesForAprove = 10
   const threshold = totalVotes === 0 ? 0 : Math.min((totalVotes / totalVotesForAprove) * 100, 100)
   // const threshold = 100
 

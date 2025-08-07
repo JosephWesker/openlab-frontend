@@ -1,18 +1,43 @@
-import { Box, Button } from "@mui/material"
+import { Box, Button, AppBar, Toolbar, Link, Container } from "@mui/material"
+import logoImage from "@/assets/images/logo.webp"
+import { useEffect } from "react"
 
 // Importación de componentes modulares de onboarding
-import { FirstHeroSection } from "../../../components/onBoarding/FirstHeroSection"
-import { SecondInitiativeLifecycle } from "../../../components/onBoarding/SecondInitiativeLifecycle"
-import { FourIncentiveArchitecture } from "../../../components/onBoarding/FourIncentiveArchitecture"
-import { ThreeGameRules } from "../../../components/onBoarding/ThreeGameRules"
-import { FiveTokenomicsChart } from "../../../components/onBoarding/FiveTokenomicsChart"
-import { SixValuePrinciples } from "../../../components/onBoarding/SixValuePrinciples"
-import { SevenProtocolFlow } from "../../../components/onBoarding/SevenProtocolFlow"
+import { FirstHeroSection } from "@/components/onBoarding/FirstHeroSection"
+import { SecondInitiativeLifecycle } from "@/components/onBoarding/SecondInitiativeLifecycle"
+import { FourIncentiveArchitecture } from "@/components/onBoarding/FourIncentiveArchitecture"
+import { ThreeGameRules } from "@/components/onBoarding/ThreeGameRules"
+import { FiveTokenomicsChart } from "@/components/onBoarding/FiveTokenomicsChart"
+import { SixValuePrinciples } from "@/components/onBoarding/SixValuePrinciples"
+import { SevenProtocolFlow } from "@/components/onBoarding/SevenProtocolFlow"
 import SendIcon from "@mui/icons-material/Send"
 import { useNavigate } from "react-router"
 
 export default function PageProtocolMore() {
   const navigate = useNavigate()
+
+  // Scroll suave al inicio cuando se renderiza el componente
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
+  const navItems = [
+    { label: "Introducción", href: "#introduccion" },
+    { label: "Ciclo de Vida", href: "#ciclo-vida" },
+    { label: "Axiomas", href: "#axiomas" },
+    { label: "Participación", href: "#participacion" },
+    { label: "Tokenomics", href: "#tokenomics" },
+    { label: "Protocolo", href: "#protocolo" },
+  ]
+
+  // Función para scroll suave a las secciones
+  const handleScrollToSection = (href: string) => {
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
+
   return (
     <Box
       sx={{
@@ -22,46 +47,142 @@ export default function PageProtocolMore() {
         overflow: "hidden",
       }}
     >
-      {/* Hero Section */}
-      <FirstHeroSection />
+      {/* Navbar */}
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(10px)",
+          zIndex: 1100,
+          border: "none",
+        }}
+      >
+        <Container maxWidth={false} sx={{ maxWidth: "1200px" }}>
+          <Toolbar sx={{ justifyContent: "space-between", px: 0 }}>
+            {/* Logo */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box
+                component="img"
+                src={logoImage}
+                alt="Openlab"
+                sx={{ height: 32, width: "auto", cursor: "pointer" }}
+                onClick={() => navigate("/")}
+              />
+            </Box>
 
-      {/* Initiative Lifecycle */}
-      <SecondInitiativeLifecycle />
+            {/* Navigation Links */}
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                gap: 3,
+                alignItems: "center",
+              }}
+            >
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  component="button"
+                  onClick={() => handleScrollToSection(item.href)}
+                  sx={{
+                    textDecoration: "none",
+                    color: "text.primary",
+                    fontWeight: 500,
+                    fontSize: "0.95rem",
+                    transition: "color 0.2s ease",
+                    border: "none",
+                    background: "none",
+                    cursor: "pointer",
+                    "&:hover": {
+                      color: "primary.main",
+                    },
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </Box>
 
-      {/* Game Rules */}
-      <ThreeGameRules />
+            {/* Botón Empezar */}
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<SendIcon />}
+              onClick={() => navigate("/")}
+              sx={{
+                borderRadius: "25px",
+                px: 3,
+                py: 1,
+                fontWeight: 600,
+                textTransform: "none",
+                fontSize: "0.95rem",
+                boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+                "&:hover": {
+                  boxShadow: "0 6px 16px rgba(59, 130, 246, 0.4)",
+                },
+              }}
+            >
+              Empezar
+            </Button>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-      {/* Incentive Architecture */}
-      <FourIncentiveArchitecture />
+      {/* Contenido principal con padding-top para compensar navbar fijo */}
+      <Box>
+        {/* Hero Section */}
+        <Box id="introduccion">
+          <FirstHeroSection />
+        </Box>
 
-      {/* Tokenomics Chart */}
-      <FiveTokenomicsChart />
+        {/* Initiative Lifecycle */}
+        <Box id="ciclo-vida">
+          <SecondInitiativeLifecycle />
+        </Box>
 
-      {/* Value Principles */}
-      <SixValuePrinciples />
+        {/* Game Rules */}
+        <Box id="axiomas">
+          <ThreeGameRules />
+        </Box>
 
-      {/* Protocol Visualization */}
-      <SevenProtocolFlow />
+        {/* Incentive Architecture */}
+        <Box id="participacion">
+          <FourIncentiveArchitecture />
+        </Box>
 
-      {/* Botón Empezar */}
-      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          sx={{
-            borderRadius: "25px",
-            px: 4,
-            py: 1.5,
-            fontSize: "1rem",
-            textTransform: "none",
-            boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
-          }}
-          endIcon={<SendIcon sx={{ fontSize: "1rem" }} />}
-          onClick={() => navigate("/")}
-        >
-          Empezar
-        </Button>
+        {/* Tokenomics Chart */}
+        <Box id="tokenomics">
+          <FiveTokenomicsChart />
+        </Box>
+
+        {/* Value Principles */}
+        <SixValuePrinciples />
+
+        {/* Protocol Visualization */}
+        <Box id="protocolo">
+          <SevenProtocolFlow />
+        </Box>
+
+        {/* Botón Empezar */}
+        <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{
+              borderRadius: "25px",
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              textTransform: "none",
+              boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+            }}
+            endIcon={<SendIcon sx={{ fontSize: "1rem" }} />}
+            onClick={() => navigate("/")}
+          >
+            Empezar
+          </Button>
+        </Box>
       </Box>
 
       {/* Floating background decorations */}
