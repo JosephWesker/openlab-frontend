@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import { Box, Typography, Container, Card, CardContent } from "@mui/material"
 import { motion } from "framer-motion"
 import { theme } from "@/lib/theme"
-import collaboratorImage from "@/assets/images/onBoarding/collaborator.png"
-import investorImage from "@/assets/images/onBoarding/investor.png"
-import leaderImage from "@/assets/images/onBoarding/leader.png"
+import collaboratorImage from "@/assets/images/onboarding/collaborator.png"
+import investorImage from "@/assets/images/onboarding/investor.png"
+import leaderImage from "@/assets/images/onboarding/leader.png"
 
 interface Participant {
   id: string
