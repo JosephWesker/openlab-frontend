@@ -1,7 +1,6 @@
 import { useParams } from "react-router"
 import { useEffect, useState } from "react"
 import Chip from "@mui/material/Chip"
-// import ShareRoundedIcon from '@mui/icons-material/ShareRounded'
 import TabsNav from "@/pages/protected/dashboard/initiative/components/tabsNav"
 import Sidebar from "@/pages/protected/dashboard/initiative/components/sidebar/sidebar"
 import Carousel from "@/pages/protected/dashboard/initiative/components/carousel"
